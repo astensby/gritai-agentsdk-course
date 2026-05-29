@@ -1,0 +1,31 @@
+{
+  "name": "gritai-agentsdk-course",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GritAI · Claude Agent SDK Workshop — TypeScript, from zero to agent",
+  "type": "module",
+  "workspaces": [
+    "step-*"
+  ],
+  "overrides": {
+    "postcss": "^8.5.10"
+  },
+  "scripts": {
+    "step-0": "npm start --workspace=step-0-raw-api",
+    "step-1": "npm start --workspace=step-1-hello-loop",
+    "step-2": "npm start --workspace=step-2-external-mcp",
+    "step-2b": "npm start --workspace=step-2b-builtin-tools",
+    "step-3": "npm start --workspace=step-3-custom-mcp",
+    "step-3b": "npm start --workspace=step-3b-real-weather",
+    "step-4": "npm start --workspace=step-4-skills",
+    "step-5": "npm start --workspace=step-5-interactive-repl",
+    "step-5-streaming": "npm run start:streaming --workspace=step-5-interactive-repl",
+    "step-6": "npm run dev --workspace=step-6-web-chat",
+    "step-7": "npm start --workspace=step-7-subagents",
+    "step-8": "npm start --workspace=step-8-hooks",
+    "step-9": "npm start --workspace=step-9-permissions",
+    "step-10": "npm start --workspace=step-10-capstone-meeting-notes",
+    "step-11": "npm start --workspace=step-11-vercel-ai-ollama",
+    "typecheck:all": "npm run typecheck --workspaces --if-present"
+  }
+}

@@ -1,0 +1,34 @@
+node_modules/
+dist/
+.env
+.env.local
+.next/
+out/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Per-step sandbox contents
+step-2-external-mcp/sandbox/*
+!step-2-external-mcp/sandbox/.gitkeep
+step-2b-builtin-tools/sandbox/*
+!step-2b-builtin-tools/sandbox/.gitkeep
+step-5-interactive-repl/sandbox/*
+!step-5-interactive-repl/sandbox/.gitkeep
+step-6-web-chat/sandbox/*
+!step-6-web-chat/sandbox/.gitkeep
+step-8-hooks/sandbox/*
+!step-8-hooks/sandbox/.gitkeep
+step-9-permissions/sandbox/*
+!step-9-permissions/sandbox/.gitkeep
+step-11-vercel-ai-ollama/sandbox/*
+!step-11-vercel-ai-ollama/sandbox/.gitkeep
+
+# Capstone output is regenerated on every run
+step-10-capstone-meeting-notes/output/*
+!step-10-capstone-meeting-notes/output/.gitkeep
+
+# Author working notes — not for publish
+.notes/
