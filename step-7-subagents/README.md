@@ -5,7 +5,7 @@ A main agent that delegates specialist work to **subagents**. This is the single
 ## What's new
 
 - The `agents` option in `ClaudeAgentOptions`
-- The built-in `Task` tool — how the main agent dispatches to subagents
+- The built-in delegation tool (`Agent`; older CLIs called it `Task`, still accepted as an alias) — how the main agent dispatches to subagents
 - A "coordinator + specialists" pattern: one main agent, two subagents (`code-reviewer`, `test-planner`)
 
 ## Run it
@@ -15,13 +15,13 @@ A main agent that delegates specialist work to **subagents**. This is the single
 npm run step-7
 ```
 
-Watch the trace — you'll see the main agent dispatch two `Task` calls (one per subagent), each subagent reports back, and the main agent synthesizes a final summary.
+Watch the trace — you'll see the main agent dispatch two `Agent` calls (one per subagent; the tool is `Agent` on current CLIs, `Task` on older ones), each subagent reports back, and the main agent synthesizes a final summary.
 
 ## How it works
 
 ```ts
 options: {
-  allowedTools: ["Read", "Task"],           // ← main agent needs Task to dispatch
+  allowedTools: ["Read", "Agent", "Task"],  // ← main agent needs the delegation tool (Agent/Task) to dispatch
   agents: {
     "code-reviewer": {
       description: "...",                   // ← main agent uses this to decide WHEN to dispatch
@@ -33,7 +33,7 @@ options: {
 }
 ```
 
-The main agent's system prompt is automatically augmented with a list of available subagents (taken from each `description`). When the main agent decides to delegate, it emits a `Task` tool call with `subagent_type: "code-reviewer"` and a prompt for the subagent. The SDK spins up a fresh agent loop for that subagent with its own context and tools, and returns the final result to the main agent.
+The main agent's system prompt is automatically augmented with a list of available subagents (taken from each `description`). When the main agent decides to delegate, it emits an `Agent` tool call (named `Task` on older CLIs) with `subagent_type: "code-reviewer"` and a prompt for the subagent. The SDK spins up a fresh agent loop for that subagent with its own context and tools, and returns the final result to the main agent.
 
 ## Why subagents
 
@@ -58,7 +58,7 @@ The main agent's system prompt is automatically augmented with a list of availab
 
 - Add a third subagent `security-auditor` that focuses only on security. Watch the main agent route differently.
 - Swap `model: "haiku"` on `test-planner` (cheaper). The other can stay on Sonnet.
-- Drop `Task` from the main agent's `allowedTools`. The agents are configured but the main agent can no longer reach them — useful test.
+- Drop **both** `Agent` and `Task` from the main agent's `allowedTools` (they're the same tool — `Task` is just the legacy alias, so removing only one still lets it dispatch). With both gone, the agents are configured but the main agent can no longer reach them — useful test.
 
 ## Next
 

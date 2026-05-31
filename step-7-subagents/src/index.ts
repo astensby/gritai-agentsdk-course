@@ -6,10 +6,12 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 //   - code-reviewer: spots bugs, security issues, code smells
 //   - test-planner:  proposes a test plan for the same code
 //
-// The main agent uses the built-in `Task` tool to spin up each subagent.
-// Each subagent runs in its own context with its own system prompt and
-// tool whitelist — keeps the main agent's context lean and gives each
-// subagent a tight, single-responsibility role.
+// The main agent uses the built-in delegation tool to spin up each subagent.
+// Recent CLI versions renamed that tool from `Task` to `Agent` (with `Task`
+// kept as an alias), so we allow-list both names and match both when we watch
+// the coordinator dispatch. Each subagent runs in its own context with its own
+// system prompt and tool whitelist — keeps the main agent's context lean and
+// gives each subagent a tight, single-responsibility role.
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const sampleDir = path.resolve(__dirname, "..", "sample");
@@ -19,12 +21,14 @@ const response = query({
   options: {
     model: "claude-sonnet-4-6",
 
-    // The main agent gets Read + Task. Task is how it delegates to subagents.
-    allowedTools: ["Read", "Task"],
+    // The main agent gets Read + the delegation tool. `Agent` is the current
+    // name; `Task` is the legacy alias — list both so this works regardless
+    // of the CLI version bundled with the installed SDK.
+    allowedTools: ["Read", "Agent", "Task"],
     additionalDirectories: [sampleDir],
 
     // Each entry under `agents` defines a subagent. The key is the name
-    // the main agent uses when calling Task.
+    // the main agent passes as `subagent_type` when it delegates.
     agents: {
       "code-reviewer": {
         description:
@@ -60,8 +64,9 @@ for await (const message of response) {
       if (block.type === "text") {
         process.stdout.write(block.text);
       } else if (block.type === "tool_use") {
-        // Watch the coordinator dispatch Task calls — each one spawns a subagent.
-        if (block.name === "Task") {
+        // Watch the coordinator delegate — each call spawns a subagent.
+        // Match both the current name (`Agent`) and the legacy alias (`Task`).
+        if (block.name === "Agent" || block.name === "Task") {
           const input = block.input as { subagent_type?: string };
           console.log(`\n\n[dispatch] subagent: ${input.subagent_type}`);
         }

@@ -841,7 +841,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
           <path d="M22 14 L29 25" stroke="#87867F" stroke-width="1.5"/>
         </svg>
         <h4>Subagents</h4>
-        <p>Decompose a job into specialists with their own prompt and tool whitelist. The main agent dispatches to them with the built-in <code>Task</code> tool.</p>
+        <p>Decompose a job into specialists with their own prompt and tool whitelist. The main agent dispatches to them with the built-in <code>Agent</code> tool (alias <code>Task</code>).</p>
         <div class="ref"><a href="#step-7">step 7</a></div>
       </div>
     </div>
@@ -1215,11 +1215,11 @@ additionalDirectories: [sandboxDir],   <span class="cmt">// grants file-tool acc
           <div class="stepnum">7<span class="sub">subagents</span></div>
           <div class="summary-body">
             <div class="ttl">Delegate to specialist subagents</div>
-            <p class="desc">A coordinator agent dispatches to a <code>code-reviewer</code> and a <code>test-planner</code> via the built-in <code>Task</code> tool. Each subagent has its own prompt and toolset.</p>
+            <p class="desc">A coordinator agent dispatches to a <code>code-reviewer</code> and a <code>test-planner</code> via the built-in <code>Agent</code> tool (alias <code>Task</code>). Each subagent has its own prompt and toolset.</p>
             <div class="tags">
               <span class="tag cat-control">control</span>
               <span class="tag">agents option</span>
-              <span class="tag">Task tool</span>
+              <span class="tag">Agent tool</span>
             </div>
           </div>
           <div class="chevron">▸</div>
@@ -1228,7 +1228,7 @@ additionalDirectories: [sandboxDir],   <span class="cmt">// grants file-tool acc
           <h5>Run it</h5>
           <div class="run"><span class="prompt">$</span> npm run step-7 <button onclick="copyCmd(this,'npm run step-7')">copy</button></div>
           <h5>The shape</h5>
-<div class="codeblock">allowedTools: [<span class="str">"Read"</span>, <span class="str">"Task"</span>],   <span class="cmt">// Task is how the coordinator dispatches</span>
+<div class="codeblock">allowedTools: [<span class="str">"Read"</span>, <span class="str">"Agent"</span>, <span class="str">"Task"</span>],   <span class="cmt">// Agent (alias Task) is how the coordinator dispatches</span>
 agents: {
   <span class="str">"code-reviewer"</span>: {
     description: <span class="str">"Reviews TS for bugs, security, code smells."</span>,
