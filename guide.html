@@ -675,7 +675,7 @@
     <div class="sec-head">
       <span class="idx">01</span>
       <h2>The arc, at a glance</h2>
-      <span class="count">14 steps</span>
+      <span class="count">15 steps</span>
     </div>
     <p class="sec-intro">
       Each dot is one step. The colours group steps by what they teach: the foundation
@@ -688,6 +688,7 @@
         <a class="arc-node" data-cat="foundation" href="#step-1"><span class="pill">loop</span><span class="dot"></span><span class="num">1</span></a>
         <a class="arc-node" data-cat="mcp" href="#step-2"><span class="pill">mcp ext</span><span class="dot"></span><span class="num">2</span></a>
         <a class="arc-node" data-cat="mcp" href="#step-2b"><span class="pill">built-in</span><span class="dot"></span><span class="num">2b</span></a>
+        <a class="arc-node" data-cat="mcp" href="#step-2c"><span class="pill">transports</span><span class="dot"></span><span class="num">2c</span></a>
         <a class="arc-node" data-cat="mcp" href="#step-3"><span class="pill">mcp own</span><span class="dot"></span><span class="num">3</span></a>
         <a class="arc-node" data-cat="mcp" href="#step-3b"><span class="pill">real api</span><span class="dot"></span><span class="num">3b</span></a>
         <a class="arc-node" data-cat="skills" href="#step-4"><span class="pill">skills</span><span class="dot"></span><span class="num">4</span></a>
@@ -865,7 +866,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
         <h3>The agent loop &amp; its tools</h3>
         <p>From the raw API to an agent that calls a real-world tool. By the end you can wire the SDK to anything that speaks HTTP or stdio.</p>
         <div class="steps">
-          <a href="#step-0">0</a><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-2b">2b</a><a href="#step-3">3</a><a href="#step-3b">3b</a>
+          <a href="#step-0">0</a><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-2b">2b</a><a href="#step-2c">2c</a><a href="#step-3">3</a><a href="#step-3b">3b</a>
         </div>
       </div>
       <div class="phase">
@@ -892,7 +893,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
     <div class="sec-head">
       <span class="idx">05</span>
       <h2>Every step, in order</h2>
-      <span class="count">14 steps</span>
+      <span class="count">15 steps</span>
     </div>
     <p class="sec-intro">
       Each step is a card you can expand for the key code, the command to run it,
@@ -1036,6 +1037,45 @@ additionalDirectories: [sandboxDir],   <span class="cmt">// grants file-tool acc
           <p><code>allowedTools</code> is an <em>auto-approve</em> list, not an availability whitelist. An agent with <code>allowedTools: ["Read","Write"]</code> can still call <code>Bash</code> at runtime — to actually remove a tool, use <code>disallowedTools</code> or the <code>tools</code> option. The capstone (step 10) uses both.</p>
           <h5>Try this</h5>
           <p>Edit the prompt to ask the agent to run <code>ls</code> via <code>Bash</code> first. Then add <code>disallowedTools: ["Bash"]</code> and rerun — it will refuse and pick a different approach.</p>
+        </div>
+      </details>
+
+      <details class="step" id="step-2c" data-cat="mcp">
+        <summary>
+          <div class="stepnum">2c<span class="sub">stdio · http</span></div>
+          <div class="summary-body">
+            <div class="ttl">Local &amp; remote MCP servers</div>
+            <p class="desc">Where can a server live? On your machine, launched as a subprocess (<strong>stdio</strong>), or in the cloud, reached over <strong>HTTP</strong>. To the agent both are just <code>mcp__&lt;key&gt;__&lt;tool&gt;</code>.</p>
+            <div class="tags">
+              <span class="tag cat-mcp">mcp</span>
+              <span class="tag">stdio</span>
+              <span class="tag">type:"http"</span>
+            </div>
+          </div>
+          <div class="chevron">▸</div>
+        </summary>
+        <div class="body">
+          <h5>Run it</h5>
+          <div class="run"><span class="prompt">$</span> npm run step-2c <button onclick="copyCmd(this,'npm run step-2c')">copy</button></div>
+          <p>Ships a tiny MCP server <em>you own</em> (<code>server/police-mcp.ts</code>, ~150 lines over Norway's live police log) and points the agent at it over stdio. Pure TypeScript — no extra toolchain.</p>
+          <h5>Two transports, same agent</h5>
+<div class="codeblock">mcpServers: {
+  police: {                              <span class="cmt">// LOCAL — a subprocess (stdio)</span>
+    command: <span class="str">"npx"</span>,
+    args: [<span class="str">"tsx"</span>, policeServer],       <span class="cmt">// any exe that speaks MCP works</span>
+  },
+  entur: {                               <span class="cmt">// REMOTE — no subprocess</span>
+    type: <span class="str">"http"</span>,
+    url: <span class="str">"https://…run.app/mcp"</span>,         <span class="cmt">// streamable HTTP endpoint</span>
+    <span class="cmt">// headers: { Authorization: `Bearer ${token}` },</span>
+  },
+}</div>
+          <h5>The stdio golden rule</h5>
+          <p>A stdio server talks protocol on <strong>stdout</strong> — so all logging must go to <code>stderr</code> (<code>console.error</code>), or you corrupt the stream the SDK is reading.</p>
+          <h5>The whitelist still bites</h5>
+          <p>Tools are namespaced by the <code>mcpServers</code> <em>key</em>, not the server's own name, and default-deny applies to both transports: <code>allowedTools: ["mcp__police__latest_incidents", "mcp__entur__get_departures"]</code>.</p>
+          <h5>Try this</h5>
+          <p>Uncomment the <code>entur</code> block, whitelist a couple of its tools, and ask a question that needs <em>both</em> servers — <em>"Any incidents near Oslo S, and when's the next train from there?"</em> Watch the trace pull from two prefixes.</p>
         </div>
       </details>
 

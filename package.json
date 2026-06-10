@@ -15,6 +15,7 @@
     "step-1": "npm start --workspace=step-1-hello-loop",
     "step-2": "npm start --workspace=step-2-external-mcp",
     "step-2b": "npm start --workspace=step-2b-builtin-tools",
+    "step-2c": "npm start --workspace=step-2c-mcp-transports",
     "step-3": "npm start --workspace=step-3-custom-mcp",
     "step-3b": "npm start --workspace=step-3b-real-weather",
     "step-4": "npm start --workspace=step-4-skills",

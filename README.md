@@ -14,6 +14,7 @@ You start with a **single API call** and finish with a **useful agent** that tur
 | [`step-1-hello-loop`](./step-1-hello-loop) | A single `query()` call | Async-iterable message stream |
 | [`step-2-external-mcp`](./step-2-external-mcp) | An external MCP server (filesystem) | `mcpServers` + `allowedTools` |
 | [`step-2b-builtin-tools`](./step-2b-builtin-tools) | The SDK's built-in `Read`/`Write`/`Bash`/... | MCP isn't needed for everything |
+| [`step-2c-mcp-transports`](./step-2c-mcp-transports) | A local MCP server (stdio) + a remote one (HTTP) | `command` vs `type: "http"` transports |
 | [`step-3-custom-mcp`](./step-3-custom-mcp) | Your own TS functions as MCP tools (canned data) | `createSdkMcpServer` + `tool()` + zod |
 | [`step-3b-real-weather`](./step-3b-real-weather) | The same tool, now calling a real API | `fetch` → Open-Meteo (no key) |
 | [`step-4-skills`](./step-4-skills) | A Skill the agent invokes autonomously | `.claude/skills/` + `settingSources` |
@@ -31,7 +32,7 @@ You start with a **single API call** and finish with a **useful agent** that tur
 git clone <this repo>
 cd gritai-agentsdk-course
 cp .env.example .env       # paste your ANTHROPIC_API_KEY
-npm install                # installs deps for all 14 steps (workspaces)
+npm install                # installs deps for all 15 steps (workspaces)
 ```
 
 That's it. No per-folder `cd`, no per-folder `npm install`, no per-folder `.env`.
@@ -71,7 +72,7 @@ Next.js (step 6) uses `dotenv-cli` to do the same thing, since `next dev` has it
 
 A suggested order through the steps, grouped by what each phase builds. Skip around if you're self-paced — every step is standalone — but the phases land cleanly back-to-back in a live workshop.
 
-- **Phase 1 — Build the loop.** The agent loop and its tools, from the raw API to a tool that calls the real world: `step-0` → `step-1` → `step-2` + `step-2b` (external MCP vs built-ins) → `step-3` → `step-3b` (same tool, real API).
+- **Phase 1 — Build the loop.** The agent loop and its tools, from the raw API to a tool that calls the real world: `step-0` → `step-1` → `step-2` + `step-2b` + `step-2c` (external MCP vs built-ins vs local/remote transports) → `step-3` → `step-3b` (same tool, real API).
 - **Phase 2 — Teach it well.** Skills change behaviour without changing code; subagents split a big job into specialists: `step-4` → `step-7`.
 - **Phase 3 — Put it to work.** Real I/O, observability, permissions, and composition: `step-5` → `step-6` (web) → `step-8` (hooks) → `step-9` (permissions) → `step-10` (**capstone**) → `step-11` (alt SDK + local model, bonus).
 
@@ -117,6 +118,8 @@ That'll work because npm workspaces hoist the deps into the root `node_modules`.
 │ npm run step-2           │ External MCP (filesystem)                            │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
 │ npm run step-2b          │ Built-in tools, no MCP                               │
+├──────────────────────────┼──────────────────────────────────────────────────────┤
+│ npm run step-2c          │ Local + remote MCP (stdio / HTTP)                    │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
 │ npm run step-3           │ Custom MCP (weather tool)                            │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
