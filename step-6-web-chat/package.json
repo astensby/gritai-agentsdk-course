@@ -9,18 +9,18 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "0.3.152",
-    "@modelcontextprotocol/server-filesystem": "2026.1.14",
-    "next": "^16.2.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "zod": "^4.0.0"
+    "@anthropic-ai/claude-agent-sdk": "0.3.267",
+    "@modelcontextprotocol/server-filesystem": "2026.8.31",
+    "next": "^16.3.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.1"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "dotenv-cli": "^7.4.2",
-    "typescript": "^5.6.3"
+    "@types/node": "^24.13.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "dotenv-cli": "^11.0.0",
+    "typescript": "~5.9.3"
   }
 }

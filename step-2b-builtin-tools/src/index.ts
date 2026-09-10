@@ -17,7 +17,7 @@ const sandboxDir = path.resolve(__dirname, "..", "sandbox");
 const response = query({
   prompt: `Create a file called 'limerick.txt' in ${sandboxDir} with a short limerick about TypeScript. Then read it back to confirm.`,
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
 
     // Just whitelist the built-in tools by their bare names. No MCP at all.
     // (Tools without `mcp__` prefix are built-ins.)

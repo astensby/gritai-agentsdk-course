@@ -7,9 +7,6 @@
   "workspaces": [
     "step-*"
   ],
-  "overrides": {
-    "postcss": "^8.5.10"
-  },
   "scripts": {
     "step-0": "npm start --workspace=step-0-raw-api",
     "step-1": "npm start --workspace=step-1-hello-loop",

@@ -16,10 +16,24 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const sampleDir = path.resolve(__dirname, "..", "sample");
 
+// *** BACKGROUND SUBAGENTS — new, and it changes what you see on screen. ***
+// The Agent tool now takes `run_in_background`, and it defaults to TRUE. Left
+// alone, the coordinator fires both subagents, says "they're running in the
+// background", and ENDS ITS TURN — so the stream emits a `result` message with
+// a cost *before* either subagent has reported. The real answer arrives later,
+// in a second turn, with its own `result`. So you get three cost lines where
+// you expected one, and a puzzling "it finished, but where's the summary?"
+// gap in between.
+//
+// Asking for the foreground restores the linear dispatch -> report -> summarise
+// trace this step is here to show. Drop the line to see the background flow —
+// it's genuinely useful for long-running work, just not for reading a trace.
 const response = query({
-  prompt: `Use the code-reviewer and test-planner subagents to analyze ${path.join(sampleDir, "auth.ts")}. Then give me a final summary in 5 bullet points.`,
+  prompt: `Use the code-reviewer and test-planner subagents to analyze ${path.join(sampleDir, "auth.ts")}. Then give me a final summary in 5 bullet points.
+
+Run both subagents in the FOREGROUND (run_in_background: false) and wait for each to finish before you summarise.`,
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
 
     // The main agent gets Read + the delegation tool. `Agent` is the current
     // name; `Task` is the legacy alias — list both so this works regardless
@@ -58,8 +72,20 @@ Group by function. Don't write the actual tests — just the list of what should
   },
 });
 
+// A stream can now contain MORE THAN ONE `result` message — one per turn, and
+// a backgrounded subagent produces extra turns. So don't print on every result;
+// keep the last one and report it after the stream closes. (This is the correct
+// pattern regardless: `result` means "a turn ended", not "the run is over".)
+let finalCostUsd = 0;
+
 for await (const message of response) {
   if (message.type === "assistant") {
+    // Skip anything a SUBAGENT said. Subagent messages carry a
+    // `parent_tool_use_id`; the coordinator's own messages have it null. Without
+    // this the two subagents' full transcripts interleave into stdout and bury
+    // the 5-bullet summary we actually asked for.
+    if (message.parent_tool_use_id) continue;
+
     for (const block of message.message.content) {
       if (block.type === "text") {
         process.stdout.write(block.text);
@@ -73,6 +99,8 @@ for await (const message of response) {
       }
     }
   } else if (message.type === "result") {
-    console.log(`\n\n---\nCost: $${message.total_cost_usd.toFixed(6)}`);
+    finalCostUsd = message.total_cost_usd;
   }
 }
+
+console.log(`\n\n---\nCost: $${finalCostUsd.toFixed(6)}`);

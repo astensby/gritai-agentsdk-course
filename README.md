@@ -1,6 +1,6 @@
 # GritAI · Claude Agent SDK Workshop
 
-A hands-on, progressive workshop for the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk/overview) in TypeScript, by [GritAI](https://gritai.no). Fourteen runnable step folders, one root install, one `.env` file. Drop in at any step.
+A hands-on, progressive workshop for the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk/overview) in TypeScript, by [GritAI](https://gritai.no). Fifteen runnable step folders, one root install, one `.env` file. Drop in at any step.
 
 > **Interactive companion:** open [`guide.html`](./guide.html) in a browser for a visual walk-through of the whole arc, with expandable step cards and copyable run commands.
 
@@ -55,7 +55,7 @@ npm run step-5-streaming   # step 5's advanced streaming-input variant
 
 ## Prerequisites
 
-- **Node.js 20+** (`nvm use` picks up `.nvmrc`)
+- **Node.js 24 LTS.** The repo ships an `.nvmrc`, so `nvm use` (or `fnm use`) selects the right version. Node 20 reached end-of-life on 30 April 2026 — the SDK still runs on it. No version manager? `brew install fnm` then `fnm install 24` is the quickest route on macOS.
 - **An Anthropic API key** — get one at [console.anthropic.com](https://console.anthropic.com/)
 - **npm** (ships with Node)
 - *(For step 11)* — a running [Ollama](https://ollama.ai) server with a tool-capable model pulled
@@ -81,7 +81,7 @@ A suggested order through the steps, grouped by what each phase builds. Skip aro
 1. **`ANTHROPIC_API_KEY` not set** — make sure you copied `.env.example` to `.env` (at the **root**, not inside a step folder) and pasted your key.
 2. **A Skill isn't loading** — skills are discovered from your setting sources. The SDK default loads all of them (`user` + `project` + `local`), so a project's `.claude/skills/` is picked up automatically. If you've passed `settingSources: []` (isolation mode) you've turned discovery off — include `"project"`. See [step-4](./step-4-skills).
 3. **An MCP tool doesn't fire** — list it (or a wildcard) in `allowedTools`. Tools are named `mcp__<server-name>__<tool-name>`. Built-in tools use bare names (`Read`, `Write`, ...).
-4. **Node too old** — the SDK requires Node 18+; the workspace `tsx --env-file` flag requires Node 20.6+. This repo uses 20.
+4. **Node too old** — the workspace `tsx --env-file` flag requires Node 20.6+, but Node 20 is end-of-life (April 2026). This repo targets **Node 24 LTS** via `.nvmrc`; run `nvm use` before anything else.
 
 ## "Can I just run one step in isolation?"
 
@@ -96,7 +96,8 @@ That'll work because npm workspaces hoist the deps into the root `node_modules`.
 
 ## Supply-chain notes
 
-- The root `package.json` pins `overrides: { postcss: "^8.5.10" }`, which forces a patched postcss into Next.js's build pipeline (step 6) and resolves [GHSA-qx2v-qp2m-jg93]. With that override in place, `npm install` should report **`0 vulnerabilities`** (verify on a clean clone). Do **not** run `npm audit fix --force` — it would downgrade Next.js to 9.x and pull in dozens of advisories; the override is the correct fix.
+- **`npm audit` should report `0 vulnerabilities`** on a clean clone. Verified on 10 September 2026 against the committed lockfile. If it doesn't, run plain `npm update` (which moves transitive deps inside the ranges already declared) and re-check — that is almost always the whole fix.
+- Do **not** run `npm audit fix --force`. It would downgrade Next.js across a major and pull in dozens of advisories. Plain `npm update` is the correct tool; `--force` is not.
 
 ## Further reading
 
@@ -121,7 +122,9 @@ That'll work because npm workspaces hoist the deps into the root `node_modules`.
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
 │ npm run step-2c          │ Local + remote MCP (stdio / HTTP)                    │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
-│ npm run step-3           │ Custom MCP (weather tool)                            │
+│ npm run step-3           │ Custom MCP (weather tool, canned data)               │
+├──────────────────────────┼──────────────────────────────────────────────────────┤
+│ npm run step-3b          │ Same tool, real Open-Meteo API                       │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
 │ npm run step-4           │ Skills                                               │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤

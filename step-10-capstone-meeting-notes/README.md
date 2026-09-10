@@ -12,7 +12,7 @@ The whole workshop in one small, **actually useful** agent: convert raw meeting 
 
 No MCP servers. No web UI. No subagents. Just the pieces this job actually needs.
 
-> **About `settingSources`:** the `settingSources: ["project"]` line in `src/index.ts` scopes skill discovery to this folder. In SDK 0.3.152 the default already includes `project`, so deleting the line still loads the skill — but setting it to `[]` (isolation mode) disables discovery, and the agent then emits unstructured prose with no error message. Keep it as `["project"]` for reproducible runs. See [step 4](../step-4-skills).
+> **About `settingSources`:** the `settingSources: ["project"]` line in `src/index.ts` scopes skill discovery to this folder. The SDK default already includes `project`, so deleting the line still loads the skill — but setting it to `[]` (isolation mode) disables discovery, and the agent then emits unstructured prose with no error message. Keep it as `["project"]` for reproducible runs. See [step 4](../step-4-skills).
 
 ## Run it
 

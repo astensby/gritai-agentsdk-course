@@ -63,7 +63,17 @@ export function buildAgentOptions(): Options {
   const sandboxDir = path.resolve(__dirname, "..", "sandbox");
 
   return {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
+
+    // Run the session INSIDE the sandbox. Two reasons:
+    //  1. The filesystem MCP server below speaks the MCP "roots" protocol: on
+    //     connect it asks us for our roots and replaces its allowed directories
+    //     with whatever we answer. Our root is this `cwd`. Without this line the
+    //     server's own command-line argument is overridden and the agent can
+    //     read and write the whole step folder — including its own source.
+    //  2. Skill discovery still works: the engine walks UP from `cwd` to find
+    //     the project root, so `.claude/skills/` one level above is still found.
+    cwd: sandboxDir,
 
     // Scope skill discovery to this project (see step 4).
     settingSources: ["project"],
@@ -72,7 +82,7 @@ export function buildAgentOptions(): Options {
     mcpServers: {
       fs: {
         command: "npx",
-        args: ["-y", "@modelcontextprotocol/server-filesystem", sandboxDir],
+        args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
       },
       weather: weatherServer,
     },
@@ -85,11 +95,20 @@ export function buildAgentOptions(): Options {
       "mcp__weather__getWeather",
     ],
 
+    // Without this, "save that to a file" quietly fails. The built-in Write/Edit
+    // tools are always in the model's toolbox and it prefers them for file work;
+    // they are NOT in `allowedTools`, and in a headless session an unapproved
+    // tool is simply denied — so the agent apologises instead of writing. Taking
+    // the built-ins away leaves the MCP server as the only route, which is the
+    // one this step is teaching. (Step 2b is the mirror image: built-ins only.)
+    disallowedTools: ["Write", "Edit", "NotebookEdit"],
+
     systemPrompt: {
       type: "preset",
       preset: "claude_code",
       append:
-        "You are the workshop demo agent. Keep replies short and conversational unless asked otherwise.",
+        "You are the workshop demo agent. Keep replies short and conversational unless asked otherwise. " +
+        "For any file operation, use the mcp__fs__* tools — they are scoped to your sandbox directory.",
     },
   };
 }

@@ -14,10 +14,10 @@ We also touched on the Q4 roadmap but parked it for next time.
 const response = query({
   prompt: `Here are my raw meeting notes — please format them:\n\n${rawNotes}`,
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
 
-    // Skills are discovered from your on-disk "setting sources." In SDK
-    // 0.3.152 the default is ["user", "project", "local"] (all of them), so
+    // Skills are discovered from your on-disk "setting sources." The SDK
+    // default is ["user", "project", "local"] (all of them), so
     // .claude/skills/ already loads even if you omit this line. We pass
     // ["project"] on purpose: it SCOPES discovery to this folder, so workshop
     // runs depend only on the skill shipped here — not on whatever you happen

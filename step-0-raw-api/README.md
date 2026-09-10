@@ -25,8 +25,9 @@ You'll see the response, then token counts and a stop reason.
 const client = new Anthropic();
 
 const response = await client.messages.create({
-  model: "claude-sonnet-4-6",
-  max_tokens: 1024,
+  model: "claude-sonnet-5",
+  max_tokens: 4096,
+  output_config: { effort: "low" },
   messages: [
     { role: "user", content: "Explain what an AI agent is in three sentences." },
   ],

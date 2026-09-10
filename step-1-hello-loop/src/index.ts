@@ -14,7 +14,7 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 const response = query({
   prompt: "Explain what an AI agent is in three sentences.",
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
   },
 });
 

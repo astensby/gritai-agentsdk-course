@@ -12,6 +12,7 @@ The agent doesn't care which is which. Both just show up as `mcp__<key>__<tool>`
 - A **local MCP server you own** (`server/police-mcp.ts`) instead of an off-the-shelf one — a tiny stdio server over Norway's public police log (Politiloggen).
 - The `type: "http"` transport for talking to a **remote** MCP server (shown with Norway's live transit server, Entur).
 - Reinforces the step-2 `allowedTools` default-deny gotcha — it applies identically to both transports.
+- `alwaysLoad` — how **tool search** changes the way MCP tools reach the model.
 
 ## Run it
 
@@ -38,6 +39,28 @@ tools under `mcp__police__<tool>`. Our server happens to be TypeScript, so we
 launch it with `tsx` — but the `command` can be anything that speaks MCP on
 stdio: `python a_server.py`, a compiled binary, `npx -y some-package`, etc.
 That's exactly what step 2 did with `@modelcontextprotocol/server-filesystem`.
+
+### Why you'll see an extra `ToolSearch` call
+
+MCP tool schemas are no longer all pasted into the prompt. Tool search is on by
+default, so MCP tools are **deferred**: the model first calls `ToolSearch` to
+find them by name, then calls the tool it found. That keeps the context window
+small when you have 200 tools mounted — but it costs a round-trip, and a tool
+the model never searches for is a tool it never uses, so tool **names and
+descriptions** now matter more than ever.
+
+```ts
+police: {
+  command: "npx",
+  args: ["tsx", policeServer],
+  alwaysLoad: true,        // ← pin this server's schemas into the prompt
+}
+```
+
+`alwaysLoad: true` restores the old behaviour. Worth it for a handful of tools
+the agent needs on turn 1; the trade-off is that startup now blocks until this
+server connects (5s cap), because the schemas must exist when the first prompt
+is built. Comment it out and re-run to watch `ToolSearch` reappear in the trace.
 
 `server/police-mcp.ts` is a complete, minimal MCP server (~150 lines): it
 creates an `McpServer`, registers two tools with Zod input schemas, and connects

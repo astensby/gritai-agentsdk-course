@@ -6,7 +6,8 @@ The same agent from step 5, behind a tiny Next.js web UI. The point: **the SDK d
 
 - A Next.js App Router app with one page and one API route
 - The SDK runs in the route handler; the browser talks to it over **Server-Sent Events**
-- `app/agent.ts` is essentially identical to step 5's `src/agent.ts` — same MCP servers, same skill, same options
+- `app/agent.ts` is essentially identical to step 5's `src/agent.ts` — same MCP servers, same skill, same options (including step 5's `cwd` + `disallowedTools` pair)
+- `agentRules: false` in `next.config.ts` — Next 16.3+ writes `AGENTS.md`/`CLAUDE.md` into the project root on first `next dev`; switched off here so this step doesn't drop unexpected files into your folder
 
 ## Run it
 

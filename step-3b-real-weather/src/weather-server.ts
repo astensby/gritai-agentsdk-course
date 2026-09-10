@@ -2,7 +2,7 @@ import { createSdkMcpServer, tool } from "@anthropic-ai/claude-agent-sdk";
 import { z } from "zod";
 
 // SAME tools as step 3 — but the handlers now call a REAL weather service:
-// the free, no-API-key Open-Meteo API, over plain `fetch` (built into Node 20).
+// the free, no-API-key Open-Meteo API, over plain `fetch` (built into Node since 18).
 // That's the payoff of a custom tool: wrap *any* function, including a live
 // HTTP API, and the agent can call it. (Needs an internet connection; if a
 // call fails the handler returns a friendly message and the agent recovers.)

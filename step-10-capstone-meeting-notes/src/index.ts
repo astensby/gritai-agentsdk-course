@@ -34,7 +34,7 @@ const response = query({
 Don't skip any files. Don't add anything that isn't in the source transcripts.`,
 
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
 
     // This job only needs Glob/Read/Write. Note `allowedTools` AUTO-APPROVES
     // those (so they run without a prompt) — it does NOT remove the others.
@@ -50,7 +50,7 @@ Don't skip any files. Don't add anything that isn't in the source transcripts.`,
     // it explicitly just narrows the search.) See step 4 for the full story.
     settingSources: ["project"],
 
-    // Observe every tool call so the workshop audience can see what's happening.
+    // Observe every tool call so you can see what's happening.
     hooks: {
       PreToolUse: [
         {

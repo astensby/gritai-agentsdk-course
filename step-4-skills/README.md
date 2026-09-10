@@ -41,7 +41,7 @@ options: {
 }
 ```
 
-In SDK 0.3.152 the default is `["user", "project", "local"]` (all layers), so `.claude/skills/` already loads even if you omit the option. We pass `["project"]` on purpose: workshop runs then depend only on the skill shipped in this folder, not on whatever you happen to have in your personal `~/.claude`. To turn filesystem settings (and skill discovery) **off**, pass `[]` — that's the SDK's isolation mode.
+The SDK default is `["user", "project", "local"]` (all layers), so `.claude/skills/` already loads even if you omit the option. We pass `["project"]` on purpose: workshop runs then depend only on the skill shipped in this folder, not on whatever you happen to have in your personal `~/.claude`. To turn filesystem settings (and skill discovery) **off**, pass `[]` — that's the SDK's isolation mode.
 
 ## Skill anatomy
 
@@ -74,4 +74,4 @@ Two things matter most:
 
 ## Next
 
-In [step 5](../step-5-interactive-repl), we'll let participants **chat** with the agent instead of running a one-shot prompt — turning everything we've built so far into an interactive shell.
+In [step 5](../step-5-interactive-repl), you'll **chat** with the agent instead of running a one-shot prompt — turning everything we've built so far into an interactive shell.

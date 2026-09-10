@@ -54,7 +54,7 @@ console.log(`Loaded ${skills.length} skill(s) from .claude/skills/`);
 const mcpClient = await createMCPClient({
   transport: new StdioTransport({
     command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-filesystem", sandboxDir],
+    args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
   }),
 });
 const mcpTools = await mcpClient.tools();

@@ -57,13 +57,19 @@ export function buildAgentOptions(): Options {
   // root (where `next dev` ran), which is what we want here.
   const sandboxDir = path.resolve(process.cwd(), "sandbox");
   return {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
+    // Run the session inside the sandbox — the filesystem MCP server replaces
+    // its allowed directories with the client's MCP roots, and our root is this
+    // `cwd`. Without it the server's command-line argument is overridden and the
+    // agent gets the whole Next.js project. Skill discovery is unaffected: the
+    // engine walks up from `cwd` to the project root to find `.claude/`.
+    cwd: sandboxDir,
     // Scope skill discovery to this project (see step 4).
     settingSources: ["project"],
     mcpServers: {
       fs: {
         command: "npx",
-        args: ["-y", "@modelcontextprotocol/server-filesystem", sandboxDir],
+        args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
       },
       weather: weatherServer,
     },
@@ -74,11 +80,17 @@ export function buildAgentOptions(): Options {
       "mcp__fs__list_directory",
       "mcp__weather__getWeather",
     ],
+    // Same reason as step 5: the built-in Write/Edit tools are always present
+    // and the model prefers them for file work, but they aren't allow-listed —
+    // so a "save this to a file" request is denied and the agent just
+    // apologises. Removing them leaves the MCP server as the only route.
+    disallowedTools: ["Write", "Edit", "NotebookEdit"],
     systemPrompt: {
       type: "preset",
       preset: "claude_code",
       append:
-        "You are the workshop web-chat agent. Keep replies short and conversational.",
+        "You are the workshop web-chat agent. Keep replies short and conversational. " +
+        "For any file operation, use the mcp__fs__* tools — they are scoped to your sandbox directory.",
     },
   };
 }

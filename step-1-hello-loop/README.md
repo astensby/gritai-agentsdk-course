@@ -26,7 +26,7 @@ Duration: 1842ms
 
 ## Try this
 
-- Swap the model to `claude-haiku-4-5` (faster, cheaper) or `claude-opus-4-7` (smarter, costlier) and observe the cost change.
+- Swap the model to `claude-haiku-4-5` (faster, cheaper) or `claude-opus-5` (smarter, costlier) and observe the cost change.
 - Change the prompt to something requiring tools — like `"Read package.json and tell me the dependencies."` — and watch it fail. Why? You haven't given it any tools yet. That's [step 2](../step-2-external-mcp).
 
 ## Key concepts

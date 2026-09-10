@@ -62,7 +62,7 @@ const canUseTool: CanUseTool = async (toolName, input, opts): Promise<Permission
 const response = query({
   prompt: `Create a file called pizza.txt in ${sandboxDir} with a short pizza recipe. Then read it back, then run 'ls' on the sandbox folder.`,
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
 
     // NOTE: we deliberately leave allowedTools empty so EVERY tool call
     // routes through canUseTool. In a real app you'd allowedTools the

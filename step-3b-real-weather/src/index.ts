@@ -10,7 +10,7 @@ const response = query({
   prompt:
     "What's the weather in Oslo right now? Also give me a 3-day forecast for San Francisco.",
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
 
     // Mount our in-process MCP server. The key ("weather") becomes the tool prefix.
     mcpServers: {

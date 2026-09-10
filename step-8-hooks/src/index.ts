@@ -59,7 +59,7 @@ const blockDangerousBash: HookCallback = async (input) => {
 const response = query({
   prompt: `Write a file called notes.txt in ${sandboxDir} with one TypeScript tip, then try to delete it with rm. After that, list the files in ${sandboxDir}.`,
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
     allowedTools: ["Read", "Write", "Bash"],
     additionalDirectories: [sandboxDir],
 

@@ -8,6 +8,7 @@ Everything from steps 1–4, but as a multi-turn chat in your terminal. This is 
 - A small `agent.ts` that composes the full options (external MCP + custom MCP + skill); step 6 mirrors this same setup in its own folder
 - The first `systemPrompt` in the course — the `claude_code` preset plus a one-line `append` to set the agent's persona (see `agent.ts`)
 - Two patterns shown: **`resume`** (primary, simple) and **streaming-input** (advanced)
+- `cwd` + `disallowedTools` — the pair that keeps "save that to a file" on the MCP server instead of silently failing (see [step 2](../step-2-external-mcp))
 
 ## Run it
 
@@ -65,7 +66,7 @@ In `src/index-streaming.ts` we keep **one** `query()` call alive for the whole c
 |---|---|---|
 | Number of `query()` calls | one per turn | one for the whole session |
 | Mental model | request/response loop | single long-lived stream |
-| Best fit | clearest for teaching, REPLs, HTTP request handlers | already async/streaming environments |
+| Best fit | clearest to follow; REPLs, HTTP request handlers | already async/streaming environments |
 
 For step 6 (Next.js) we use the `resume` pattern because each HTTP request is naturally its own `query()` call.
 

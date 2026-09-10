@@ -15,7 +15,7 @@ const policeServer = path.resolve(__dirname, "..", "server", "police-mcp.ts");
 const response = query({
   prompt: `What are the latest police incidents in Norway right now? Summarise a few, with location and time.`,
   options: {
-    model: "claude-sonnet-4-6",
+    model: "claude-sonnet-5",
 
     mcpServers: {
       // ── LOCAL MCP server (stdio transport) ─────────────────────────────
@@ -27,6 +27,23 @@ const response = query({
       police: {
         command: "npx",
         args: ["tsx", policeServer],
+
+        // *** TOOL SEARCH — why you'll see an extra `ToolSearch` call. ***
+        // MCP tool schemas are no longer all pasted into the prompt. Tool search
+        // is on by default, so MCP tools are DEFERRED: the model first calls
+        // `ToolSearch` to find them by name, then calls the tool it found. That
+        // keeps the context window small when you have 200 tools mounted — but
+        // it costs a round-trip, and a tool the model never searches for is a
+        // tool it never uses (so tool NAMES and DESCRIPTIONS now matter even
+        // more than before).
+        //
+        // `alwaysLoad: true` pins this server's tools into the prompt like the
+        // old behaviour. Worth it for a handful of tools the agent needs on
+        // turn 1; the trade-off is that startup now blocks until this server
+        // connects (5s cap), because the schemas must exist when the first
+        // prompt is built. Comment it out and re-run to watch `ToolSearch`
+        // reappear in the trace.
+        alwaysLoad: true,
       },
 
       // ── REMOTE MCP server (HTTP transport) ─────────────────────────────

@@ -1,6 +1,6 @@
 # Step 11 — Vercel AI SDK + Ollama (alternative SDK)
 
-The same agent pattern (MCP + skills + custom tools) — but with the **Vercel AI SDK v6** and a **local Ollama** model instead of the Claude Agent SDK + Claude API.
+The same agent pattern (MCP + skills + custom tools) — but with the **Vercel AI SDK v7** and a **local Ollama** model instead of the Claude Agent SDK + Claude API.
 
 This step is the **contrast lesson**: agent concepts are portable across SDKs. Only the glue code changes.
 
@@ -12,9 +12,21 @@ This step is the **contrast lesson**: agent concepts are portable across SDKs. O
 | Provider | `@anthropic-ai/claude-agent-sdk` (Claude only) | `ai` (multi-provider) — here via `ollama-ai-provider-v2` |
 | Loop control | Built-in, auto-iterates | Explicit `stopWhen: stepCountIs(N)` |
 | MCP integration | Native `mcpServers` option | `createMCPClient` from `@ai-sdk/mcp` |
+| MCP **roots** | Advertises roots — the client's `cwd` **overrides** a filesystem server's CLI directory | Does not advertise roots — the server keeps its CLI directory |
 | Custom tools | `createSdkMcpServer + tool()` | `tool({ inputSchema, execute })` from `ai` |
 | Skills | Auto-discovered from `.claude/skills/` via `settingSources` | **Not built-in** — `src/skills.ts` loads them manually |
-| Model | Claude (`claude-sonnet-4-6`) | Any Ollama model (`llama3.3`, `qwen2.5-coder`, ...) |
+| Model | Claude (`claude-sonnet-5`) | Any Ollama model (`llama3.3`, `qwen2.5-coder`, ...) |
+
+## A note on versions
+
+This step moved from AI SDK v6 to **v7** and needed **no source changes at all** —
+`streamText`, `tool`, `stepCountIs` and `Experimental_StdioMCPTransport` all kept their
+shapes across the major. Only three version numbers in `package.json` moved
+(`ai` 6→7, `@ai-sdk/mcp` 1→2, `ollama-ai-provider-v2` 3→4).
+
+That's worth sitting with, because it cuts against the instinct to fear a major bump:
+the version number is a statement about the *maintainer's* freedom to change things,
+not a prediction that *your* code breaks.
 
 ## Prerequisites
 
@@ -102,11 +114,11 @@ What's painful:
 | **Claude Agent SDK** | Building production-quality agents. Best tool calling + skill discovery + sub-agents. Premium Claude-only. |
 | **Vercel AI SDK** | Multi-provider freedom. Use with Claude, GPT, Gemini, or local models. Smaller surface area; you wire more yourself. |
 
-For a workshop, the Claude Agent SDK is the right teaching default — it lets the agent ideas land before the participants worry about SDK plumbing. This step exists so they can see the same ideas in another shape, and pick the right tool for their own projects.
+The rest of this course uses the Claude Agent SDK, which lets the agent ideas land before you have to worry about SDK plumbing. This step exists so you've seen the same ideas in another shape — and can pick the right tool for your own projects.
 
 ## Try this
 
 - Swap `qwen2.5-coder:14b` and observe whether the model uses the skill correctly. Then try a 7B model and watch it drift.
 - Add a second skill (`code-explainer`?) and prompt for code review. Notice the model has to choose between two skills based only on description matching.
-- Replace `ollama()` with `anthropic('claude-sonnet-4-6')` from `@ai-sdk/anthropic` and rerun. Same code, much better results — that's the model quality gap.
+- Replace `ollama()` with `anthropic('claude-sonnet-5')` from `@ai-sdk/anthropic` and rerun. Same code, much better results — that's the model quality gap.
 - Add `experimental_telemetry: { isEnabled: true }` to `streamText` to see every step the agent took.

@@ -635,7 +635,7 @@
         <div class="eyebrow">GritAI · Workshop Companion · TypeScript</div>
         <h1>The Claude Agent SDK — from zero to <em>agent</em></h1>
         <p class="intro">
-          Fourteen runnable steps from <code>messages.create()</code> to an agent that
+          Fifteen runnable steps from <code>messages.create()</code> to an agent that
           actually does a job. Each step is one self-contained folder; one root
           <code>npm install</code> sets up all of them. Open this page next to your editor
           and pick wherever you want to start.
@@ -728,8 +728,8 @@
         <h3>Before you start</h3>
         <div class="prereqs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 24px; font-size: 13.5px; color: var(--g700); line-height: 1.6; margin-top: 4px;">
           <div>
-            <strong style="display: block; font-family: var(--serif); font-weight: 600; margin-bottom: 4px;">Node 20.6 or newer</strong>
-            Check with <code>node --version</code>. The repo pins Node&nbsp;20 in <code>.nvmrc</code> — with <a href="https://github.com/nvm-sh/nvm" style="color: var(--clay); text-decoration: underline;">nvm</a> just run <code>nvm use</code>. The built-in <code>--env-file</code> flag every step relies on needs 20.6+.
+            <strong style="display: block; font-family: var(--serif); font-weight: 600; margin-bottom: 4px;">Node 24 LTS (20.6+ minimum)</strong>
+            Check with <code>node --version</code>. The repo pins Node&nbsp;24 in <code>.nvmrc</code> — with <a href="https://github.com/nvm-sh/nvm" style="color: var(--clay); text-decoration: underline;">nvm</a> just run <code>nvm use</code>. The built-in <code>--env-file</code> flag every step relies on needs 20.6+.
           </div>
           <div>
             <strong style="display: block; font-family: var(--serif); font-weight: 600; margin-bottom: 4px;">An Anthropic API key</strong>
@@ -764,7 +764,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
 <span class="cmt"># OLLAMA_MODEL=qwen2.5-coder:14b</span></div>
         <h3 style="margin-top: 22px;">Why no <code>dotenv</code>?</h3>
         <p style="margin: 0; font-size: 13.5px; color: var(--g700);">
-          Node 20.6+ has <code>--env-file</code> built in.
+          Node 20.6+ has <code>--env-file</code> built in; this repo targets Node 24 LTS.
           Every step's <code>start</code> script reads <code>--env-file=../.env</code>,
           so the root <code>.env</code> is the single source of truth — no extra package,
           no per-step <code>dotenv/config</code> imports.
@@ -933,8 +933,9 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
           <div class="run"><span class="prompt">$</span> npm run step-0 <button onclick="copyCmd(this,'npm run step-0')">copy</button></div>
           <h5>The core call</h5>
 <div class="codeblock"><span class="kw">const</span> response = <span class="kw">await</span> client.messages.create({
-  model: <span class="str">"claude-sonnet-4-6"</span>,
-  max_tokens: 1024,
+  model: <span class="str">"claude-sonnet-5"</span>,
+  max_tokens: 4096,                       <span class="cmt">// ceiling covers thinking tokens too</span>
+  output_config: { effort: <span class="str">"low"</span> },   <span class="cmt">// cheapest lever on cost + latency</span>
   messages: [{ role: <span class="str">"user"</span>, content: <span class="str">"Explain what an AI agent is in three sentences."</span> }],
 });</div>
           <h5>What you'll see</h5>
@@ -964,7 +965,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
           <h5>The whole program</h5>
 <div class="codeblock"><span class="kw">const</span> response = query({
   prompt: <span class="str">"Explain what an AI agent is in three sentences."</span>,
-  options: { model: <span class="str">"claude-sonnet-4-6"</span> },
+  options: { model: <span class="str">"claude-sonnet-5"</span> },
 });
 
 <span class="kw">for await</span> (<span class="kw">const</span> message <span class="kw">of</span> response) {
@@ -1121,7 +1122,7 @@ additionalDirectories: [sandboxDir],   <span class="cmt">// grants file-tool acc
           <div class="stepnum">3b<span class="sub">real api</span></div>
           <div class="summary-body">
             <div class="ttl">Same tool, calling a real API</div>
-            <p class="desc">The handler now hits <a href="https://open-meteo.com">Open-Meteo</a> over Node 20's built-in <code>fetch</code>. No API key, no new deps — and the agent gets actual weather.</p>
+            <p class="desc">The handler now hits <a href="https://open-meteo.com">Open-Meteo</a> over Node's built-in <code>fetch</code>. No API key, no new deps — and the agent gets actual weather.</p>
             <div class="tags">
               <span class="tag cat-mcp">mcp</span>
               <span class="tag">fetch</span>
@@ -1167,7 +1168,7 @@ additionalDirectories: [sandboxDir],   <span class="cmt">// grants file-tool acc
           <div class="run"><span class="prompt">$</span> npm run step-4 <button onclick="copyCmd(this,'npm run step-4')">copy</button></div>
           <h5>The whole "code" change</h5>
 <div class="codeblock">options: {
-  model: <span class="str">"claude-sonnet-4-6"</span>,
+  model: <span class="str">"claude-sonnet-5"</span>,
   settingSources: [<span class="str">"project"</span>],   <span class="cmt">// scope discovery to this folder</span>
 }</div>
           <h5>Read the small print</h5>
@@ -1385,7 +1386,7 @@ agents: {
   prompt: <span class="acc">`Process every .txt in </span>${transcriptsDir}<span class="acc">: Read → use the
            meeting-notes-formatter skill → Write to </span>${outputDir}<span class="acc">/*.md.`</span>,
   options: {
-    model: <span class="str">"claude-sonnet-4-6"</span>,
+    model: <span class="str">"claude-sonnet-5"</span>,
     allowedTools: [<span class="str">"Glob"</span>, <span class="str">"Read"</span>, <span class="str">"Write"</span>],   <span class="cmt">// auto-approve these</span>
     disallowedTools: [<span class="str">"Bash"</span>],                <span class="cmt">// actually remove the shell</span>
     additionalDirectories: [transcriptsDir, outputDir],
