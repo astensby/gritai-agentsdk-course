@@ -14,7 +14,10 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 const response = query({
   prompt: "Explain what an AI agent is in three sentences.",
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
+    // Don't inherit this machine's Claude Code settings or CLAUDE.md, so the
+    // step behaves (and costs) the same on every laptop.
+    settingSources: [],
   },
 });
 

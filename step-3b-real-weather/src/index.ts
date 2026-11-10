@@ -10,7 +10,10 @@ const response = query({
   prompt:
     "What's the weather in Oslo right now? Also give me a 3-day forecast for San Francisco.",
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
+    // Don't inherit this machine's Claude Code settings or CLAUDE.md, so the
+    // step behaves (and costs) the same on every laptop.
+    settingSources: [],
 
     // Mount our in-process MCP server. The key ("weather") becomes the tool prefix.
     mcpServers: {

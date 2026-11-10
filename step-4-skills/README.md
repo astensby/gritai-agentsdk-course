@@ -43,6 +43,8 @@ options: {
 
 The SDK default is `["user", "project", "local"]` (all layers), so `.claude/skills/` already loads even if you omit the option. We pass `["project"]` on purpose: workshop runs then depend only on the skill shipped in this folder, not on whatever you happen to have in your personal `~/.claude`. To turn filesystem settings (and skill discovery) **off**, pass `[]` — that's the SDK's isolation mode.
 
+`settingSources` decides where skills are discovered. The separate `skills` option narrows which discovered skills a session can use: pass `'all'` or a list of exact names.
+
 ## Skill anatomy
 
 A SKILL.md is just markdown with YAML frontmatter:

@@ -59,7 +59,10 @@ const blockDangerousBash: HookCallback = async (input) => {
 const response = query({
   prompt: `Write a file called notes.txt in ${sandboxDir} with one TypeScript tip, then try to delete it with rm. After that, list the files in ${sandboxDir}.`,
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
+    // Don't inherit this machine's Claude Code settings or CLAUDE.md, so the
+    // step behaves (and costs) the same on every laptop.
+    settingSources: [],
     allowedTools: ["Read", "Write", "Bash"],
     additionalDirectories: [sandboxDir],
 
@@ -68,7 +71,10 @@ const response = query({
     hooks: {
       PreToolUse: [
         { hooks: [logToolCalls] },                  // fires for every tool
-        { matcher: "Bash", hooks: [blockDangerousBash] }, // fires only for Bash
+        // Fires only for Bash. Hooks fail open by default: if this one threw,
+        // the command would still run. "block" stops the call instead, which
+        // is what you want from a safety rail.
+        { matcher: "Bash", hooks: [blockDangerousBash], onFailure: "block" },
       ],
     },
   },

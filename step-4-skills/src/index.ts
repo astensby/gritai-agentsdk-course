@@ -14,7 +14,7 @@ We also touched on the Q4 roadmap but parked it for next time.
 const response = query({
   prompt: `Here are my raw meeting notes — please format them:\n\n${rawNotes}`,
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
 
     // Skills are discovered from your on-disk "setting sources." The SDK
     // default is ["user", "project", "local"] (all of them), so

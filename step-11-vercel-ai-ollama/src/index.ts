@@ -10,7 +10,7 @@ import { loadSkills, formatSkillsAsSystemBlock } from "./skills.ts";
 // ALTERNATIVE-SDK DEMO
 //
 // Same agent ideas (MCP + skills + custom tools) — different SDK, different
-// model provider. We use the Vercel AI SDK v6 with Ollama instead of the
+// model provider. We use the Vercel AI SDK v7 with Ollama instead of the
 // Claude Agent SDK with Anthropic.
 //
 // What stays the same:
@@ -54,7 +54,7 @@ console.log(`Loaded ${skills.length} skill(s) from .claude/skills/`);
 const mcpClient = await createMCPClient({
   transport: new StdioTransport({
     command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
+    args: ["-y", "@modelcontextprotocol/server-filesystem@2.1.0", sandboxDir],
   }),
 });
 const mcpTools = await mcpClient.tools();

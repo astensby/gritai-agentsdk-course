@@ -57,7 +57,7 @@ export function buildAgentOptions(): Options {
   // root (where `next dev` ran), which is what we want here.
   const sandboxDir = path.resolve(process.cwd(), "sandbox");
   return {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
     // Run the session inside the sandbox — the filesystem MCP server replaces
     // its allowed directories with the client's MCP roots, and our root is this
     // `cwd`. Without it the server's command-line argument is overridden and the
@@ -69,7 +69,7 @@ export function buildAgentOptions(): Options {
     mcpServers: {
       fs: {
         command: "npx",
-        args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
+        args: ["-y", "@modelcontextprotocol/server-filesystem@2.1.0", sandboxDir],
       },
       weather: weatherServer,
     },

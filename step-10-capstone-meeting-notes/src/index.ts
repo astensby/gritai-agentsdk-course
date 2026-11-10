@@ -34,7 +34,7 @@ const response = query({
 Don't skip any files. Don't add anything that isn't in the source transcripts.`,
 
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
 
     // This job only needs Glob/Read/Write. Note `allowedTools` AUTO-APPROVES
     // those (so they run without a prompt) — it does NOT remove the others.

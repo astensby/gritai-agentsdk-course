@@ -6,7 +6,7 @@ The "Claude wants to run X — allow?" pattern you've seen in Claude Code itself
 
 - The `canUseTool` callback in `ClaudeAgentOptions`
 - The `PermissionResult` shape (`allow` / `deny`)
-- The `permissionMode` option (`default` / `acceptEdits` / `plan` / `bypassPermissions`)
+- The `permissionMode` option (`default` / `acceptEdits` / `plan` / `bypassPermissions` / `dontAsk` / `auto`)
 
 ## Run it
 
@@ -15,7 +15,7 @@ The "Claude wants to run X — allow?" pattern you've seen in Claude Code itself
 npm run step-9
 ```
 
-For every tool the agent wants to use, you'll see:
+For each tool call that needs approval, you'll see:
 
 ```
 ┌─ Permission request ──────────────────────
@@ -44,17 +44,19 @@ const canUseTool: CanUseTool = async (toolName, input, opts) => {
 };
 
 options: {
-  allowedTools: [],   // ← empty: nothing is auto-allowed
+  allowedTools: [],   // ← empty: no allow rules
   canUseTool,
 }
 ```
 
-A tool call goes through this order:
+A tool call goes through these checks in order. Each one can settle it or pass it on:
 
-1. **Is it in `allowedTools`?** → run immediately
-2. **Else, do PreToolUse hooks say deny?** → block (step 8 pattern)
-3. **Else, is there a `canUseTool` callback?** → call it, use its decision
-4. **Else** → default to deny
+1. **`PreToolUse` hooks** → can deny outright (step 8 pattern). A hook's `allow` doesn't skip the deny and ask rules.
+2. **Deny rules** (`disallowedTools`, settings) → blocked
+3. **Ask rules** (settings) → sent to `canUseTool`
+4. **Permission mode** → for example `bypassPermissions` approves, `acceptEdits` approves file edits
+5. **Allow rules** (`allowedTools`) → run. Calls that approve themselves also stop here, such as a read inside your working directories or a read-only `ls`, which is why this step only prompts for the `Write`.
+6. **`canUseTool`** → your callback decides. With no callback the call is denied, and `dontAsk` mode skips this step and denies.
 
 ## `permissionMode` cheat sheet
 

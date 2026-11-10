@@ -21,7 +21,10 @@ First call list_allowed_directories to find the directory you may write to.
 Then create 'haiku.txt' in that directory with a short haiku about coffee.
 Then read it back to confirm.`,
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
+    // Don't inherit this machine's Claude Code settings or CLAUDE.md, so the
+    // step behaves (and costs) the same on every laptop.
+    settingSources: [],
 
     // *** MCP ROOTS — the gotcha that bites hardest here. ***
     // The directory we pass on the command line below is only a FALLBACK.
@@ -48,7 +51,7 @@ Then read it back to confirm.`,
         // This server changed its sandbox semantics in a release mid-2026, so
         // "latest" is not a safe default here.
         // Keep this in sync with the dependency in package.json.
-        args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
+        args: ["-y", "@modelcontextprotocol/server-filesystem@2.1.0", sandboxDir],
       },
     },
 

@@ -63,7 +63,7 @@ export function buildAgentOptions(): Options {
   const sandboxDir = path.resolve(__dirname, "..", "sandbox");
 
   return {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
 
     // Run the session INSIDE the sandbox. Two reasons:
     //  1. The filesystem MCP server below speaks the MCP "roots" protocol: on
@@ -82,7 +82,7 @@ export function buildAgentOptions(): Options {
     mcpServers: {
       fs: {
         command: "npx",
-        args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
+        args: ["-y", "@modelcontextprotocol/server-filesystem@2.1.0", sandboxDir],
       },
       weather: weatherServer,
     },

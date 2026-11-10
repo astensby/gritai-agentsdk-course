@@ -733,7 +733,7 @@
           </div>
           <div>
             <strong style="display: block; font-family: var(--serif); font-weight: 600; margin-bottom: 4px;">An Anthropic API key</strong>
-            Create one at <a href="https://console.anthropic.com/settings/keys" style="color: var(--clay); text-decoration: underline;">console.anthropic.com</a> → API&nbsp;Keys. The steps make real API calls, so add a little <a href="https://console.anthropic.com/settings/billing" style="color: var(--clay); text-decoration: underline;">billing credit</a> — a dollar or two covers the whole workshop.
+            Create one at <a href="https://platform.claude.com/settings/keys" style="color: var(--clay); text-decoration: underline;">platform.claude.com</a> → API&nbsp;Keys. The steps make real API calls, so add a little <a href="https://platform.claude.com/settings/billing" style="color: var(--clay); text-decoration: underline;">billing credit</a> — a dollar or two covers the whole workshop.
           </div>
           <div>
             <strong style="display: block; font-family: var(--serif); font-weight: 600; margin-bottom: 4px;">git — and nothing else</strong>
@@ -933,7 +933,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
           <div class="run"><span class="prompt">$</span> npm run step-0 <button onclick="copyCmd(this,'npm run step-0')">copy</button></div>
           <h5>The core call</h5>
 <div class="codeblock"><span class="kw">const</span> response = <span class="kw">await</span> client.messages.create({
-  model: <span class="str">"claude-sonnet-5"</span>,
+  model: <span class="str">"claude-sonnet-5-5"</span>,
   max_tokens: 4096,                       <span class="cmt">// ceiling covers thinking tokens too</span>
   output_config: { effort: <span class="str">"low"</span> },   <span class="cmt">// cheapest lever on cost + latency</span>
   messages: [{ role: <span class="str">"user"</span>, content: <span class="str">"Explain what an AI agent is in three sentences."</span> }],
@@ -965,7 +965,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
           <h5>The whole program</h5>
 <div class="codeblock"><span class="kw">const</span> response = query({
   prompt: <span class="str">"Explain what an AI agent is in three sentences."</span>,
-  options: { model: <span class="str">"claude-sonnet-5"</span> },
+  options: { model: <span class="str">"claude-sonnet-5-5"</span>, settingSources: [] },
 });
 
 <span class="kw">for await</span> (<span class="kw">const</span> message <span class="kw">of</span> response) {
@@ -1168,7 +1168,7 @@ additionalDirectories: [sandboxDir],   <span class="cmt">// grants file-tool acc
           <div class="run"><span class="prompt">$</span> npm run step-4 <button onclick="copyCmd(this,'npm run step-4')">copy</button></div>
           <h5>The whole "code" change</h5>
 <div class="codeblock">options: {
-  model: <span class="str">"claude-sonnet-5"</span>,
+  model: <span class="str">"claude-sonnet-5-5"</span>,
   settingSources: [<span class="str">"project"</span>],   <span class="cmt">// scope discovery to this folder</span>
 }</div>
           <h5>Read the small print</h5>
@@ -1319,6 +1319,7 @@ agents: {
 };</div>
           <h5>What you'll see</h5>
           <p>The agent writes <code>notes.txt</code>, then tries <code>rm notes.txt</code>. The hook prints <code>↑ blocked by hook</code>, the deny short-circuits before the shell ever runs, and the agent gets a tool result it can recover from.</p>
+          <p>Hooks fail open by default: a hook that throws doesn't stop the tool. That's why the Bash matcher sets <code>onFailure: "block"</code>. If the safety hook breaks, the call is blocked instead of run.</p>
           <h5>Try this</h5>
           <p>Add a <em>rewrite</em> hook that strips <code>--force</code> from any <code>git push</code>. Return the modified input with <code>permissionDecision: "allow"</code> + <code>updatedInput</code>.</p>
         </div>
@@ -1352,10 +1353,12 @@ agents: {
 };</div>
           <h5>Decision order</h5>
           <ul>
-            <li>Is the tool in <code>allowedTools</code>? — auto-run</li>
-            <li>Do <code>PreToolUse</code> hooks say deny? — block (step 8)</li>
-            <li>Else, call <code>canUseTool</code> if present</li>
-            <li>Else default to deny</li>
+            <li><code>PreToolUse</code> hooks — can deny outright (step 8)</li>
+            <li>Deny rules (<code>disallowedTools</code>, settings) — blocked</li>
+            <li>Ask rules (settings) — sent to <code>canUseTool</code></li>
+            <li>Permission mode — can approve, e.g. <code>acceptEdits</code> for file edits</li>
+            <li>Allow rules (<code>allowedTools</code>) — auto-run. Read-only calls approve themselves here too</li>
+            <li><code>canUseTool</code> if present, otherwise denied</li>
           </ul>
           <h5>Try this</h5>
           <p>Wire the same callback into a Slack DM bot. The shape doesn't change — only the transport for the question.</p>
@@ -1386,7 +1389,7 @@ agents: {
   prompt: <span class="acc">`Process every .txt in </span>${transcriptsDir}<span class="acc">: Read → use the
            meeting-notes-formatter skill → Write to </span>${outputDir}<span class="acc">/*.md.`</span>,
   options: {
-    model: <span class="str">"claude-sonnet-5"</span>,
+    model: <span class="str">"claude-sonnet-5-5"</span>,
     allowedTools: [<span class="str">"Glob"</span>, <span class="str">"Read"</span>, <span class="str">"Write"</span>],   <span class="cmt">// auto-approve these</span>
     disallowedTools: [<span class="str">"Bash"</span>],                <span class="cmt">// actually remove the shell</span>
     additionalDirectories: [transcriptsDir, outputDir],
@@ -1411,7 +1414,7 @@ agents: {
           <div class="stepnum">11<span class="sub">alt sdk</span></div>
           <div class="summary-body">
             <div class="ttl">Same ideas, different SDK + local model</div>
-            <p class="desc">Vercel AI SDK v6 with a local Ollama model. The agent ideas are portable; only the glue changes.</p>
+            <p class="desc">Vercel AI SDK v7 with a local Ollama model. The agent ideas are portable; only the glue changes.</p>
             <div class="tags">
               <span class="tag cat-alt">alt</span>
               <span class="tag">streamText</span>
@@ -1448,9 +1451,9 @@ agents: {
     </div>
     <div>
       <a href="./README.md">README</a> &nbsp;·&nbsp;
-      <a href="https://gritai.no">GritAI</a> &nbsp;·&nbsp;
-      <a href="https://docs.claude.com/en/api/agent-sdk/overview">SDK overview</a> &nbsp;·&nbsp;
-      <a href="https://docs.claude.com/en/api/agent-sdk/typescript">TS reference</a> &nbsp;·&nbsp;
+      <a href="https://gritai.studio">GritAI</a> &nbsp;·&nbsp;
+      <a href="https://code.claude.com/docs/en/agent-sdk/overview">SDK overview</a> &nbsp;·&nbsp;
+      <a href="https://code.claude.com/docs/en/agent-sdk/typescript">TS reference</a> &nbsp;·&nbsp;
       <a href="https://modelcontextprotocol.io/">MCP</a>
     </div>
   </footer>

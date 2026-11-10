@@ -13,8 +13,8 @@ import {
 // Whereas:
 //   - `allowedTools` is a static whitelist
 //   - PreToolUse hooks are programmatic (deny on a regex, etc.)
-// canUseTool is a single async callback the SDK calls before EVERY tool
-// use that isn't already covered by allowedTools — and you can ask the
+// canUseTool is a single async callback the SDK calls for any tool use
+// that nothing earlier has settled (see the README) — and you can ask the
 // human whatever you want before deciding.
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -62,10 +62,12 @@ const canUseTool: CanUseTool = async (toolName, input, opts): Promise<Permission
 const response = query({
   prompt: `Create a file called pizza.txt in ${sandboxDir} with a short pizza recipe. Then read it back, then run 'ls' on the sandbox folder.`,
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
 
-    // NOTE: we deliberately leave allowedTools empty so EVERY tool call
-    // routes through canUseTool. In a real app you'd allowedTools the
+    // NOTE: we deliberately leave allowedTools empty so every call that
+    // needs approval reaches canUseTool. Calls that approve themselves, like
+    // a Read in the working directory or a read-only `ls`, never get here.
+    // In a real app you'd allowedTools the
     // cheap/safe tools (Read, Glob, Grep) and only prompt for the risky
     // ones (Write, Edit, Bash).
     allowedTools: [],

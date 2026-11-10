@@ -15,7 +15,10 @@ const policeServer = path.resolve(__dirname, "..", "server", "police-mcp.ts");
 const response = query({
   prompt: `What are the latest police incidents in Norway right now? Summarise a few, with location and time.`,
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
+    // Don't inherit this machine's Claude Code settings or CLAUDE.md, so the
+    // step behaves (and costs) the same on every laptop.
+    settingSources: [],
 
     mcpServers: {
       // ── LOCAL MCP server (stdio transport) ─────────────────────────────

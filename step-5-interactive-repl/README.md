@@ -54,6 +54,8 @@ while (true) {
 
 On the first turn there's no session yet; the SDK creates one and emits its ID in the `system: init` message. From then on we pass `resume: sessionId` so the SDK rehydrates the full prior conversation from its session log.
 
+If you log `total_cost_usd`, note that a resumed session carries on from its earlier turns, so the figure is already cumulative. Don't add the turns up.
+
 ## Advanced: streaming-input mode
 
 ```bash

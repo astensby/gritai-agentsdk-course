@@ -15,7 +15,7 @@ This step is the **contrast lesson**: agent concepts are portable across SDKs. O
 | MCP **roots** | Advertises roots — the client's `cwd` **overrides** a filesystem server's CLI directory | Does not advertise roots — the server keeps its CLI directory |
 | Custom tools | `createSdkMcpServer + tool()` | `tool({ inputSchema, execute })` from `ai` |
 | Skills | Auto-discovered from `.claude/skills/` via `settingSources` | **Not built-in** — `src/skills.ts` loads them manually |
-| Model | Claude (`claude-sonnet-5`) | Any Ollama model (`llama3.3`, `qwen2.5-coder`, ...) |
+| Model | Claude (`claude-sonnet-5-5`) | Any Ollama model (`llama3.3`, `qwen2.5-coder`, ...) |
 
 ## A note on versions
 
@@ -120,5 +120,5 @@ The rest of this course uses the Claude Agent SDK, which lets the agent ideas la
 
 - Swap `qwen2.5-coder:14b` and observe whether the model uses the skill correctly. Then try a 7B model and watch it drift.
 - Add a second skill (`code-explainer`?) and prompt for code review. Notice the model has to choose between two skills based only on description matching.
-- Replace `ollama()` with `anthropic('claude-sonnet-5')` from `@ai-sdk/anthropic` and rerun. Same code, much better results — that's the model quality gap.
+- Replace `ollama()` with `anthropic('claude-sonnet-5-5')` from `@ai-sdk/anthropic` and rerun. Same code, much better results — that's the model quality gap.
 - Add `experimental_telemetry: { isEnabled: true }` to `streamText` to see every step the agent took.

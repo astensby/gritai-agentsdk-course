@@ -33,7 +33,10 @@ const response = query({
 
 Run both subagents in the FOREGROUND (run_in_background: false) and wait for each to finish before you summarise.`,
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
+    // Don't inherit this machine's Claude Code settings or CLAUDE.md, so the
+    // step behaves (and costs) the same on every laptop.
+    settingSources: [],
 
     // The main agent gets Read + the delegation tool. `Agent` is the current
     // name; `Task` is the legacy alias — list both so this works regardless

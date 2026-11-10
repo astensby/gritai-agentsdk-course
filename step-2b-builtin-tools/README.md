@@ -24,7 +24,7 @@ Same outcome as step 2 (a file gets created in `./sandbox/`), but with zero MCP 
 | Local file I/O (`Read`, `Write`, `Edit`) | Calling external services (GitHub, Slack, Postgres, ...) |
 | Running shell commands (`Bash`) | Wrapping your own business logic as a tool (step 3) |
 | Searching the codebase (`Grep`, `Glob`) | Tools that need to live in their own process |
-| Delegating to subagents (`Task`, see step 7) | Reusing the same tool across multiple agents/languages |
+| Delegating to subagents (`Agent`, see step 7) | Reusing the same tool across multiple agents/languages |
 
 The built-in toolset is essentially the same toolbox you use when you talk to Claude Code on the command line. Same `Read`, same `Write`, same `Bash`.
 
@@ -38,11 +38,12 @@ The built-in toolset is essentially the same toolbox you use when you talk to Cl
 | `Bash` | Run a shell command. |
 | `Glob` | Find files by pattern. |
 | `Grep` | Search file contents with regex. |
-| `Task` | Delegate to a subagent (see [step 7](../step-7-subagents)). |
+| `Agent` | Delegate to a subagent (see [step 7](../step-7-subagents)). |
 | `WebFetch`, `WebSearch` | Fetch a URL or search the web. |
-| `TodoWrite` | Manage a todo list during the agent loop. |
 
-See [the Agent SDK docs](https://docs.claude.com/en/api/agent-sdk/typescript) for the full list and their input shapes.
+`TodoWrite` and `TaskCreate` are no longer default tools on Sonnet 5 and later, so don't expect them in the trace.
+
+See [the Agent SDK docs](https://code.claude.com/docs/en/agent-sdk/typescript) for the full list and their input shapes.
 
 ## The `additionalDirectories` gotcha
 

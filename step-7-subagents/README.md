@@ -70,6 +70,10 @@ for await (const message of response) {
 }
 ```
 
+## Forks
+
+The main agent can also fork itself (`subagent_type: "fork"`). This is on by default in SDK sessions. To opt out, add `disallowedTools: ["Agent(fork)"]`. A subagent's own `Agent` calls run in the foreground by default.
+
 ## Why subagents
 
 - **Context isolation** — a subagent's intermediate reasoning doesn't pollute the main agent's context window

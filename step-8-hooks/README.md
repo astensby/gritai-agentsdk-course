@@ -32,7 +32,7 @@ The agent tried to `rm`, got blocked, recovered, and continued.
 hooks: {
   PreToolUse: [
     { hooks: [logToolCalls] },                    // matcher omitted = all tools
-    { matcher: "Bash", hooks: [blockDangerousBash] }, // matcher = tool name pattern
+    { matcher: "Bash", hooks: [blockDangerousBash], onFailure: "block" }, // matcher = tool name pattern
   ],
 }
 ```
@@ -51,7 +51,7 @@ async (input, toolUseID, { signal }) => {
       hookEventName: "PreToolUse",
       permissionDecision: "deny" | "allow" | "ask",
       permissionDecisionReason: "...",
-      updatedInput: { ... },   // optionally rewrite the tool input
+      updatedInput: { ... },   // optionally rewrite the tool input (validated; unknown keys are dropped)
     },
   };
 }
@@ -72,17 +72,24 @@ A non-exhaustive subset; see `HOOK_EVENTS` in the SDK types for the full list.
 | `PermissionRequest` / `PermissionDenied` | Around permission checks |
 | `SubagentStart` / `SubagentStop` | Subagent lifecycle |
 
+## Hooks fail open
+
+A `PreToolUse` hook that throws doesn't stop the tool. The call carries on to the normal permission flow and your app gets a warning message. A callback that returns nothing counts as failing too, which is why the hooks here always return `{}`.
+
+For a safety hook that's the wrong way round, so this step sets `onFailure: "block"` on the Bash matcher (needs SDK 0.3.317 or later). If the hook fails, the call is blocked instead of run. The logging hook keeps the default, because a broken logger shouldn't stop the agent.
+
 ## Hooks vs `canUseTool` vs `allowedTools`
 
 |   | `allowedTools` | `canUseTool` | Hooks |
 |---|---|---|---|
 | **Where it lives** | Static config | Single callback | Per-event matcher groups |
-| **What it can do** | Allow / deny | Allow / deny / ask | Allow / deny / ask / rewrite / observe |
+| **What it can do** | Allow / deny | Allow / deny | Allow / deny / ask / rewrite / observe |
 | **Granularity** | Per tool name | Per tool call | Per event |
 | **When to reach for it** | Coarse access control | Interactive permission UX (step 9) | Logging, auditing, safety rails, side-effects |
 
 ## Try this
 
+- Add `throw new Error("policy service down");` as the first line of `blockDangerousBash` and run the step. Every Bash call is refused. Now remove `onFailure: "block"` and run it again: the broken hook no longer stops anything, so the `rm` goes through. Read what the agent reports each time.
 - Add a `PostToolUse` hook that records latency per tool call to a CSV.
 - Use `updatedInput` to redact a secret from any `Bash` command before it runs.
 - Add a `Stop` hook that emits a desktop notification when the agent finishes (`SyncHookJSONOutput.terminalSequence` supports OSC 9).

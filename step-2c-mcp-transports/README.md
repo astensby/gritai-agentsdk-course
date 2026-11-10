@@ -68,6 +68,8 @@ a `StdioServerTransport`. The one rule to remember when writing a stdio server:
 **stdout is protocol-only** — all logging goes to `stderr`, or you corrupt the
 stream the SDK is reading.
 
+Long tool descriptions get cut: at 4,096 characters when sent up front, and at 16,384 when loaded through tool search.
+
 ## Remote server (HTTP)
 
 Same idea, no subprocess. The server already runs in the cloud; you point the
@@ -106,6 +108,8 @@ allowedTools: [
   // "mcp__entur__get_departures",       // remote (when you wire it up)
 ]
 ```
+
+A wildcard allow rule stays inside its server: `mcp__police__*` reaches only the server you named `police`.
 
 ## Try this
 

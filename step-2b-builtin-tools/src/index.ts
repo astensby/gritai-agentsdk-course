@@ -17,7 +17,10 @@ const sandboxDir = path.resolve(__dirname, "..", "sandbox");
 const response = query({
   prompt: `Create a file called 'limerick.txt' in ${sandboxDir} with a short limerick about TypeScript. Then read it back to confirm.`,
   options: {
-    model: "claude-sonnet-5",
+    model: "claude-sonnet-5-5",
+    // Don't inherit this machine's Claude Code settings or CLAUDE.md, so the
+    // step behaves (and costs) the same on every laptop.
+    settingSources: [],
 
     // Just whitelist the built-in tools by their bare names. No MCP at all.
     // (Tools without `mcp__` prefix are built-ins.)

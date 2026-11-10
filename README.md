@@ -1,6 +1,6 @@
 # GritAI · Claude Agent SDK Workshop
 
-A hands-on, progressive workshop for the [Claude Agent SDK](https://docs.claude.com/en/api/agent-sdk/overview) in TypeScript, by [GritAI](https://gritai.no). Fifteen runnable step folders, one root install, one `.env` file. Drop in at any step.
+A hands-on, progressive workshop for the [Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview) in TypeScript, by [GritAI](https://gritai.studio). Fifteen runnable step folders, one root install, one `.env` file. Drop in at any step.
 
 > **Interactive companion:** open [`guide.html`](./guide.html) in a browser for a visual walk-through of the whole arc, with expandable step cards and copyable run commands.
 
@@ -24,7 +24,7 @@ You start with a **single API call** and finish with a **useful agent** that tur
 | [`step-8-hooks`](./step-8-hooks) | Observe / audit / block tool calls | `PreToolUse` hooks |
 | [`step-9-permissions`](./step-9-permissions) | Interactive "allow this?" prompts | `canUseTool` callback + `permissionMode` |
 | [`step-10-capstone-meeting-notes`](./step-10-capstone-meeting-notes) | **Capstone** — meeting-notes agent | Composes built-ins + skill + hook into one useful agent |
-| [`step-11-vercel-ai-ollama`](./step-11-vercel-ai-ollama) | Same patterns, **different SDK + local model** | Vercel AI SDK v6 + Ollama + manual skill loader |
+| [`step-11-vercel-ai-ollama`](./step-11-vercel-ai-ollama) | Same patterns, **different SDK + local model** | Vercel AI SDK v7 + Ollama + manual skill loader |
 
 ## Setup (once)
 
@@ -56,11 +56,11 @@ npm run step-5-streaming   # step 5's advanced streaming-input variant
 ## Prerequisites
 
 - **Node.js 24 LTS.** The repo ships an `.nvmrc`, so `nvm use` (or `fnm use`) selects the right version. Node 20 reached end-of-life on 30 April 2026 — the SDK still runs on it. No version manager? `brew install fnm` then `fnm install 24` is the quickest route on macOS.
-- **An Anthropic API key** — get one at [console.anthropic.com](https://console.anthropic.com/)
+- **An Anthropic API key** — get one at [platform.claude.com](https://platform.claude.com/)
 - **npm** (ships with Node)
-- *(For step 11)* — a running [Ollama](https://ollama.ai) server with a tool-capable model pulled
+- *(For step 11)* — a running [Ollama](https://ollama.com) server with a tool-capable model pulled
 
-> **No separate Claude Code CLI install needed.** The Agent SDK is a [standalone package](https://docs.claude.com/en/api/agent-sdk/overview); the TypeScript SDK bundles a native Claude Code binary as an optional dependency, so `npm install` is all you need.
+> **No separate Claude Code CLI install needed.** The Agent SDK is a [standalone package](https://code.claude.com/docs/en/agent-sdk/overview); the TypeScript SDK bundles a native Claude Code binary as an optional dependency, so `npm install` is all you need.
 
 ## How the env works
 
@@ -82,6 +82,7 @@ A suggested order through the steps, grouped by what each phase builds. Skip aro
 2. **A Skill isn't loading** — skills are discovered from your setting sources. The SDK default loads all of them (`user` + `project` + `local`), so a project's `.claude/skills/` is picked up automatically. If you've passed `settingSources: []` (isolation mode) you've turned discovery off — include `"project"`. See [step-4](./step-4-skills).
 3. **An MCP tool doesn't fire** — list it (or a wildcard) in `allowedTools`. Tools are named `mcp__<server-name>__<tool-name>`. Built-in tools use bare names (`Read`, `Write`, ...).
 4. **Node too old** — the workspace `tsx --env-file` flag requires Node 20.6+, but Node 20 is end-of-life (April 2026). This repo targets **Node 24 LTS** via `.nvmrc`; run `nvm use` before anything else.
+5. **A tool runs that should be denied, or a step costs more on your machine** — a step that doesn't set `settingSources` loads your own Claude Code settings and `~/.claude/CLAUDE.md`, and your `permissions.defaultMode` applies. Steps that don't need skills set `settingSources: []` so they behave the same everywhere.
 
 ## "Can I just run one step in isolation?"
 
@@ -96,15 +97,15 @@ That'll work because npm workspaces hoist the deps into the root `node_modules`.
 
 ## Supply-chain notes
 
-- **`npm audit` should report `0 vulnerabilities`** on a clean clone. Verified on 10 September 2026 against the committed lockfile. If it doesn't, run plain `npm update` (which moves transitive deps inside the ranges already declared) and re-check — that is almost always the whole fix.
+- **`npm audit` reports 3 moderate findings** on a clean clone, verified on 9 November 2026 against the committed lockfile. All three come through `@modelcontextprotocol/server-filesystem` (with `glob` and `minimatch`). If you see more, run plain `npm update` (which moves transitive deps inside the ranges already declared) and re-check.
 - Do **not** run `npm audit fix --force`. It would downgrade Next.js across a major and pull in dozens of advisories. Plain `npm update` is the correct tool; `--force` is not.
 
 ## Further reading
 
-- [Agent SDK Overview](https://docs.claude.com/en/api/agent-sdk/overview)
-- [TypeScript SDK Reference](https://docs.claude.com/en/api/agent-sdk/typescript)
+- [Agent SDK Overview](https://code.claude.com/docs/en/agent-sdk/overview)
+- [TypeScript SDK Reference](https://code.claude.com/docs/en/agent-sdk/typescript)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
-- [Skills documentation](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
+- [Skills documentation](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)
 - For **MCP Apps / UI resources**, see our separate MCP course material — the rendering story is host-side, not SDK-side, so it lives there.
 
 

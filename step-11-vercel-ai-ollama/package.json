@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@ai-sdk/mcp": "^2.0.48",
-    "@modelcontextprotocol/server-filesystem": "2026.8.31",
+    "@modelcontextprotocol/server-filesystem": "2.1.0",
     "ai": "^7.0.97",
     "gray-matter": "^4.0.3",
     "ollama-ai-provider-v2": "^4.0.1",
