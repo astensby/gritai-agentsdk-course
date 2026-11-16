@@ -2,7 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { streamText, stepCountIs, tool } from "ai";
 import { createMCPClient } from "@ai-sdk/mcp";
-import { Experimental_StdioMCPTransport as StdioTransport } from "@ai-sdk/mcp/mcp-stdio";
+import { StdioMCPTransport } from "@ai-sdk/mcp/mcp-stdio";
 import { ollama } from "ollama-ai-provider-v2";
 import { z } from "zod";
 import { loadSkills, formatSkillsAsSystemBlock } from "./skills.ts";
@@ -52,7 +52,7 @@ console.log(`Loaded ${skills.length} skill(s) from .claude/skills/`);
 
 // 2) Wire up an MCP server (filesystem, same one as steps 2/5/6)
 const mcpClient = await createMCPClient({
-  transport: new StdioTransport({
+  transport: new StdioMCPTransport({
     command: "npx",
     args: ["-y", "@modelcontextprotocol/server-filesystem@2.1.0", sandboxDir],
   }),

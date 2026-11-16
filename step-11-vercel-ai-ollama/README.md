@@ -20,13 +20,20 @@ This step is the **contrast lesson**: agent concepts are portable across SDKs. O
 ## A note on versions
 
 This step moved from AI SDK v6 to **v7** and needed **no source changes at all** —
-`streamText`, `tool`, `stepCountIs` and `Experimental_StdioMCPTransport` all kept their
+`streamText`, `tool`, `stepCountIs` and the MCP stdio transport all kept their
 shapes across the major. Only three version numbers in `package.json` moved
 (`ai` 6→7, `@ai-sdk/mcp` 1→2, `ollama-ai-provider-v2` 3→4).
 
 That's worth sitting with, because it cuts against the instinct to fear a major bump:
 the version number is a statement about the *maintainer's* freedom to change things,
 not a prediction that *your* code breaks.
+
+The one thing that did change is a name. The transport graduated from
+`Experimental_StdioMCPTransport` to `StdioMCPTransport`, and the old name kept working
+as a deprecated alias — your editor shows it with a strikethrough. That's how a
+maintainer warns you about a change without breaking you: the code keeps running, and
+you rename on your own schedule, before a later release drops the alias. This step now
+imports the new name.
 
 ## Prerequisites
 
