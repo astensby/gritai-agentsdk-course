@@ -10,6 +10,7 @@
   "scripts": {
     "step-0": "npm start --workspace=step-0-raw-api",
     "step-1": "npm start --workspace=step-1-hello-loop",
+    "step-1b": "npm start --workspace=step-1b-system-prompt",
     "step-2": "npm start --workspace=step-2-external-mcp",
     "step-2b": "npm start --workspace=step-2b-builtin-tools",
     "step-2c": "npm start --workspace=step-2c-mcp-transports",

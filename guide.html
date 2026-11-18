@@ -199,7 +199,7 @@
   .arc-track {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(14, minmax(0, 1fr));
+    grid-template-columns: repeat(16, minmax(0, 1fr));
     gap: 8px;
     align-items: end;
     min-height: 110px;
@@ -635,7 +635,7 @@
         <div class="eyebrow">GritAI · Workshop Companion · TypeScript</div>
         <h1>The Claude Agent SDK — from zero to <em>agent</em></h1>
         <p class="intro">
-          Fifteen runnable steps from <code>messages.create()</code> to an agent that
+          Sixteen runnable steps from <code>messages.create()</code> to an agent that
           actually does a job. Each step is one self-contained folder; one root
           <code>npm install</code> sets up all of them. Open this page next to your editor
           and pick wherever you want to start.
@@ -675,7 +675,7 @@
     <div class="sec-head">
       <span class="idx">01</span>
       <h2>The arc, at a glance</h2>
-      <span class="count">15 steps</span>
+      <span class="count">16 steps</span>
     </div>
     <p class="sec-intro">
       Each dot is one step. The colours group steps by what they teach: the foundation
@@ -686,6 +686,7 @@
       <div class="arc-track">
         <a class="arc-node" data-cat="foundation" href="#step-0"><span class="pill">raw</span><span class="dot"></span><span class="num">0</span></a>
         <a class="arc-node" data-cat="foundation" href="#step-1"><span class="pill">loop</span><span class="dot"></span><span class="num">1</span></a>
+        <a class="arc-node" data-cat="foundation" href="#step-1b"><span class="pill">prompt</span><span class="dot"></span><span class="num">1b</span></a>
         <a class="arc-node" data-cat="mcp" href="#step-2"><span class="pill">mcp ext</span><span class="dot"></span><span class="num">2</span></a>
         <a class="arc-node" data-cat="mcp" href="#step-2b"><span class="pill">built-in</span><span class="dot"></span><span class="num">2b</span></a>
         <a class="arc-node" data-cat="mcp" href="#step-2c"><span class="pill">transports</span><span class="dot"></span><span class="num">2c</span></a>
@@ -746,7 +747,7 @@
         <ol>
           <li><code>git clone &lt;repo&gt; &amp;&amp; cd gritai-agentsdk-course</code></li>
           <li><code>cp .env.example .env</code> — paste your <code>ANTHROPIC_API_KEY</code></li>
-          <li><code>npm install</code> — installs all 14 workspaces</li>
+          <li><code>npm install</code> — installs all 16 workspaces</li>
         </ol>
         <h3 style="margin-top: 22px;">Then any time</h3>
         <ol>
@@ -768,6 +769,18 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
           Every step's <code>start</code> script reads <code>--env-file=../.env</code>,
           so the root <code>.env</code> is the single source of truth — no extra package,
           no per-step <code>dotenv/config</code> imports.
+        </p>
+        <h3 style="margin-top: 22px;">Already use Claude&nbsp;Code in this repo?</h3>
+        <p style="margin: 0; font-size: 13.5px; color: var(--g700);">
+          Your notes come along. Most steps set <code>settingSources: []</code> to keep your own
+          Claude&nbsp;Code settings and <code>CLAUDE.md</code> out, but that does <strong>not</strong>
+          cover <strong>auto-memory</strong>. If you've used Claude&nbsp;Code here, it keeps a
+          <code>MEMORY.md</code> under <code>~/.claude/projects/&lt;repo&gt;/memory/</code>, and the
+          agents in this repo load it too. With the <code>claude_code</code> preset (steps 5 and 6)
+          they also get instructions for using it. So your agent sees context a fresh laptop's
+          doesn't, and your token counts run higher. Step 1b switches it off with
+          <code>settings: { autoMemoryEnabled: false }</code>; add that line to any step to match a
+          clean machine.
         </p>
       </div>
     </div>
@@ -866,7 +879,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
         <h3>The agent loop &amp; its tools</h3>
         <p>From the raw API to an agent that calls a real-world tool. By the end you can wire the SDK to anything that speaks HTTP or stdio.</p>
         <div class="steps">
-          <a href="#step-0">0</a><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-2b">2b</a><a href="#step-2c">2c</a><a href="#step-3">3</a><a href="#step-3b">3b</a>
+          <a href="#step-0">0</a><a href="#step-1">1</a><a href="#step-1b">1b</a><a href="#step-2">2</a><a href="#step-2b">2b</a><a href="#step-2c">2c</a><a href="#step-3">3</a><a href="#step-3b">3b</a>
         </div>
       </div>
       <div class="phase">
@@ -893,7 +906,7 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
     <div class="sec-head">
       <span class="idx">05</span>
       <h2>Every step, in order</h2>
-      <span class="count">15 steps</span>
+      <span class="count">16 steps</span>
     </div>
     <p class="sec-intro">
       Each step is a card you can expand for the key code, the command to run it,
@@ -976,6 +989,35 @@ ANTHROPIC_API_KEY=<span class="str">sk-ant-...</span>
           <p>The stream emits typed messages: <code>system</code> (init), one or more <code>assistant</code> with content blocks, and a final <code>result</code> with cost. With no tools allowed, you'll only ever see <code>text</code> blocks — <code>tool_use</code> shows up from step 2.</p>
           <h5>Try this</h5>
           <p>Add <code>console.log(message.type)</code> at the top of the loop to see the full message sequence.</p>
+        </div>
+      </details>
+
+      <details class="step" id="step-1b" data-cat="foundation">
+        <summary>
+          <div class="stepnum">1b<span class="sub">prompt</span></div>
+          <div class="summary-body">
+            <div class="ttl">The system prompt, set in code</div>
+            <p class="desc">One changelog job, run six ways. A string <em>replaces</em> the default; the <code>claude_code</code> preset with <code>append</code> <em>keeps</em> Claude Code's rules and adds yours.</p>
+            <div class="tags">
+              <span class="tag cat-foundation">foundation</span>
+              <span class="tag">systemPrompt</span>
+              <span class="tag">preset + append</span>
+            </div>
+          </div>
+          <div class="chevron">▸</div>
+        </summary>
+        <div class="body">
+          <h5>Run it</h5>
+          <div class="run"><span class="prompt">$</span> npm run step-1b <button onclick="copyCmd(this,'npm run step-1b')">copy</button></div>
+          <h5>The two you'll use most</h5>
+<div class="codeblock">systemPrompt: changelog,  <span class="cmt">// replaces the default</span>
+
+<span class="cmt">// or keep Claude Code's prompt and add yours:</span>
+systemPrompt: { type: <span class="str">"preset"</span>, preset: <span class="str">"claude_code"</span>, append: changelog },</div>
+          <h5>Key idea</h5>
+          <p>Leaving <code>systemPrompt</code> out does <strong>not</strong> give you Claude Code's prompt; the SDK sends a minimal default. The preset costs about 1,600 extra input tokens per request (with no tools; Claude Code's default tools add more than 10,000), which is worth paying for a coding agent and wasted on a single-purpose one. The step also shows a <code>string[]</code> with <code>SYSTEM_PROMPT_DYNAMIC_BOUNDARY</code> and <code>excludeDynamicSections</code> for prompt caching across users.</p>
+          <h5>Try this</h5>
+          <p>Run <code>npm run step-1b -- preset</code> and <code>-- append</code>. Only the second writes the <code>## [unreleased]</code> heading your rules asked for.</p>
         </div>
       </details>
 

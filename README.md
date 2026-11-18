@@ -1,6 +1,6 @@
 # GritAI · Claude Agent SDK Workshop
 
-A hands-on, progressive workshop for the [Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview) in TypeScript, by [GritAI](https://gritai.studio). Fifteen runnable step folders, one root install, one `.env` file. Drop in at any step.
+A hands-on, progressive workshop for the [Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview) in TypeScript, by [GritAI](https://gritai.studio). Sixteen runnable step folders, one root install, one `.env` file. Drop in at any step.
 
 > **Interactive companion:** open [`guide.html`](./guide.html) in a browser for a visual walk-through of the whole arc, with expandable step cards and copyable run commands.
 
@@ -12,6 +12,7 @@ You start with a **single API call** and finish with a **useful agent** that tur
 |---|---|---|
 | [`step-0-raw-api`](./step-0-raw-api) | The Anthropic SDK with no Agent SDK | `messages.create()` — the primitive everything else wraps |
 | [`step-1-hello-loop`](./step-1-hello-loop) | A single `query()` call | Async-iterable message stream |
+| [`step-1b-system-prompt`](./step-1b-system-prompt) | Six ways to set the system prompt, side by side | `systemPrompt`: string vs `preset` + `append` |
 | [`step-2-external-mcp`](./step-2-external-mcp) | An external MCP server (filesystem) | `mcpServers` + `allowedTools` |
 | [`step-2b-builtin-tools`](./step-2b-builtin-tools) | The SDK's built-in `Read`/`Write`/`Bash`/... | MCP isn't needed for everything |
 | [`step-2c-mcp-transports`](./step-2c-mcp-transports) | A local MCP server (stdio) + a remote one (HTTP) | `command` vs `type: "http"` transports |
@@ -32,7 +33,7 @@ You start with a **single API call** and finish with a **useful agent** that tur
 git clone <this repo>
 cd gritai-agentsdk-course
 cp .env.example .env       # paste your ANTHROPIC_API_KEY
-npm install                # installs deps for all 15 steps (workspaces)
+npm install                # installs deps for all 16 steps (workspaces)
 ```
 
 That's it. No per-folder `cd`, no per-folder `npm install`, no per-folder `.env`.
@@ -41,6 +42,7 @@ That's it. No per-folder `cd`, no per-folder `npm install`, no per-folder `.env`
 
 ```bash
 npm run step-1             # smallest possible agent
+npm run step-1b            # string vs preset + append system prompts
 npm run step-3             # custom MCP server with weather tool
 npm run step-6             # spins up the Next.js web chat at localhost:3000
 npm run step-7             # subagents (code reviewer + test planner)
@@ -72,7 +74,7 @@ Next.js (step 6) uses `dotenv-cli` to do the same thing, since `next dev` has it
 
 A suggested order through the steps, grouped by what each phase builds. Skip around if you're self-paced — every step is standalone — but the phases land cleanly back-to-back in a live workshop.
 
-- **Phase 1 — Build the loop.** The agent loop and its tools, from the raw API to a tool that calls the real world: `step-0` → `step-1` → `step-2` + `step-2b` + `step-2c` (external MCP vs built-ins vs local/remote transports) → `step-3` → `step-3b` (same tool, real API).
+- **Phase 1 — Build the loop.** The agent loop and its tools, from the raw API to a tool that calls the real world: `step-0` → `step-1` → `step-1b` (system prompt) → `step-2` + `step-2b` + `step-2c` (external MCP vs built-ins vs local/remote transports) → `step-3` → `step-3b` (same tool, real API).
 - **Phase 2 — Teach it well.** Skills change behaviour without changing code; subagents split a big job into specialists: `step-4` → `step-7`.
 - **Phase 3 — Put it to work.** Real I/O, observability, permissions, and composition: `step-5` → `step-6` (web) → `step-8` (hooks) → `step-9` (permissions) → `step-10` (**capstone**) → `step-11` (alt SDK + local model, bonus).
 
@@ -116,6 +118,8 @@ That'll work because npm workspaces hoist the deps into the root `node_modules`.
 │ npm run step-0           │ Raw Anthropic SDK (no Agent SDK)                     │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
 │ npm run step-1           │ Minimum viable Agent SDK loop                        │
+├──────────────────────────┼──────────────────────────────────────────────────────┤
+│ npm run step-1b          │ System prompt: string vs preset + append             │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
 │ npm run step-2           │ External MCP (filesystem)                            │
 ├──────────────────────────┼──────────────────────────────────────────────────────┤
