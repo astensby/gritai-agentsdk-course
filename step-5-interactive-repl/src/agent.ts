@@ -82,7 +82,7 @@ export function buildAgentOptions(): Options {
     mcpServers: {
       fs: {
         command: "npx",
-        args: ["-y", "@modelcontextprotocol/server-filesystem@2.1.0", sandboxDir],
+        args: ["-y", "@modelcontextprotocol/server-filesystem@2.4.0", sandboxDir],
       },
       weather: weatherServer,
     },

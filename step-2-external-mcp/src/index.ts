@@ -51,7 +51,7 @@ Then read it back to confirm.`,
         // This server changed its sandbox semantics in a release mid-2026, so
         // "latest" is not a safe default here.
         // Keep this in sync with the dependency in package.json.
-        args: ["-y", "@modelcontextprotocol/server-filesystem@2.1.0", sandboxDir],
+        args: ["-y", "@modelcontextprotocol/server-filesystem@2.4.0", sandboxDir],
       },
     },
 
