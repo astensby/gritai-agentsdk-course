@@ -99,7 +99,7 @@ That'll work because npm workspaces hoist the deps into the root `node_modules`.
 
 ## Supply-chain notes
 
-- **`npm audit` reports 3 moderate findings** on a clean clone, verified on 9 November 2026 against the committed lockfile. All three come through `@modelcontextprotocol/server-filesystem` (with `glob` and `minimatch`). If you see more, run plain `npm update` (which moves transitive deps inside the ranges already declared) and re-check.
+- **`npm audit` reports 0 findings** on a clean clone, verified on 27 November 2026 against the committed lockfile (`@modelcontextprotocol/server-filesystem` 2.4.0, `next` 16.4.6). If you see more, run plain `npm update` (which moves transitive deps inside the ranges already declared) and re-check.
 - Do **not** run `npm audit fix --force`. It would downgrade Next.js across a major and pull in dozens of advisories. Plain `npm update` is the correct tool; `--force` is not.
 
 ## Further reading

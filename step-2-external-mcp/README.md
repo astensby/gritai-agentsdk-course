@@ -26,7 +26,7 @@ cwd: sandboxDir,                                              // ← see "the ro
 mcpServers: {
   fs: {                                                       // ← key becomes tool prefix
     command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-filesystem@2026.8.31", sandboxDir],
+    args: ["-y", "@modelcontextprotocol/server-filesystem@2.4.0", sandboxDir],
   },
 }
 ```
